@@ -20,7 +20,7 @@
       </Label>
       <TextField fx:id="userNameField" layoutX="165.0" layoutY="35.0" prefHeight="25.0" prefWidth="171.0" AnchorPane.leftAnchor="165.0" AnchorPane.topAnchor="35.0" />
       <PasswordField fx:id="passwordField" layoutX="165.0" layoutY="79.0" prefHeight="25.0" prefWidth="171.0" />
-      <Button layoutX="165.0" layoutY="135.0" mnemonicParsing="false" onAction="#handleOk" text="Увійти" AnchorPane.leftAnchor="165.0" AnchorPane.topAnchor="135.0" />
-      <Button layoutX="285.0" layoutY="135.0" mnemonicParsing="false" onAction="#handleCancel" prefHeight="25.0" prefWidth="51.0" text="Вийти" />
+      <Button layoutX="165.0" layoutY="135.0" mnemonicParsing="false" onAction="#handleLogin" onKeyPressed="#handleLogin" text="Увійти" AnchorPane.leftAnchor="165.0" AnchorPane.topAnchor="135.0" />
+      <Button layoutX="285.0" layoutY="135.0" mnemonicParsing="false" onAction="#handleExit" prefHeight="25.0" prefWidth="51.0" text="Вийти" />
    </children>
 </AnchorPane>

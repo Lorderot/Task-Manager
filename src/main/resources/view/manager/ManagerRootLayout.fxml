@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="479.0" prefWidth="887.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="control.manager.ManagerMainWindowController">
+   <top>
+      <MenuBar BorderPane.alignment="CENTER">
+        <menus>
+          <Menu mnemonicParsing="false" text="Файл">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Вийти" />
+            </items>
+          </Menu>
+            <Menu mnemonicParsing="false" text="Таблиці">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#handlePlanes" text="Літаки" />
+                  <MenuItem mnemonicParsing="false" text="Проекти" />
+                  <MenuItem mnemonicParsing="false" text="Завдання" />
+                  <MenuItem mnemonicParsing="false" text="Призначенні завдання" />
+                  <MenuItem mnemonicParsing="false" onAction="#handlePrimaryTasks" text="Атомарні роботи" />
+                  <MenuItem mnemonicParsing="false" text="Запити на нових працівників" />
+              </items>
+            </Menu>
+        </menus>
+      </MenuBar>
+   </top>
+   <center>
+      <AnchorPane prefHeight="437.0" prefWidth="810.0" BorderPane.alignment="CENTER">
+         <children>
+            <TableView prefHeight="454.0" prefWidth="653.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+              <columns>
+                <TableColumn prefWidth="75.0" text="Творець">
+                     <columns>
+                        <TableColumn prefWidth="69.0" text="Ім'я" />
+                        <TableColumn prefWidth="81.0" text="Прізвище" />
+                     </columns>
+                  </TableColumn>
+                <TableColumn prefWidth="81.0" text="Літак" />
+                  <TableColumn text="Проект" />
+                  <TableColumn prefWidth="64.0" text="Пріорітет" />
+                  <TableColumn prefWidth="91.0" text="Оновлення" />
+                  <TableColumn prefWidth="93.0" text="Дедлайн" />
+                  <TableColumn prefWidth="93.0" text="Закінчений" />
+              </columns>
+            </TableView>
+            <Button layoutX="612.0" layoutY="118.0" mnemonicParsing="false" onAction="#handleShowProfile" text="Показати профіль" AnchorPane.leftAnchor="673.0" />
+            <Label layoutX="612.0" layoutY="14.0" text="Ім'я:" AnchorPane.leftAnchor="673.0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="673.0" layoutY="41.0" text="Прізвище:" AnchorPane.leftAnchor="673.0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="673.0" layoutY="72.0" text="Тип доступу:" AnchorPane.leftAnchor="673.0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Button layoutX="612.0" layoutY="163.0" mnemonicParsing="false" onAction="#handleChangePassword" text="Змінити пароль" AnchorPane.leftAnchor="673.0" />
+            <Button layoutX="612.0" layoutY="209.0" mnemonicParsing="false" text="Показати деталі проекту" AnchorPane.leftAnchor="673.0" />
+            <Button layoutX="674.0" layoutY="253.0" mnemonicParsing="false" onAction="#handleExit" text="Вийти" AnchorPane.leftAnchor="673.0" />
+            <Label fx:id="firstNameLabel" layoutX="761.0" layoutY="14.0" prefHeight="17.0" prefWidth="119.0" AnchorPane.leftAnchor="761.0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label fx:id="lastNameLabel" layoutX="761.0" layoutY="41.0" prefHeight="17.0" prefWidth="118.0" AnchorPane.leftAnchor="761.0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label fx:id="userTypeLabel" layoutX="760.0" layoutY="72.0" prefHeight="17.0" prefWidth="120.0" AnchorPane.leftAnchor="760.0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+   </center>
+</BorderPane>

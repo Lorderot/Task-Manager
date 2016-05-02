@@ -1,10 +1,12 @@
 package control;
 
 import DAO.PersonDAO;
+import app.MainApp;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import model.Person;
 import model.UserType;
@@ -32,13 +34,21 @@ public class LoginWindowController {
 
     public void setLoginStage(Stage loginStage) {
         this.loginStage = loginStage;
+        loginStage.getScene().setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                handleLogin();
+            }
+            if (event.getCode() == KeyCode.ESCAPE) {
+                handleExit();
+            }
+        });
     }
 
     public Person getPerson() {
         return person;
     }
 
-    public void handleOk() {
+    public void handleLogin() {
         Person person = authentication();
         if (person != null) {
             HibernateUtil.buildSessionFactory(person.getUserType());
@@ -47,7 +57,7 @@ public class LoginWindowController {
         }
     }
 
-    public void handleCancel() {
+    public void handleExit() {
         loginStage.close();
     }
 
@@ -56,11 +66,9 @@ public class LoginWindowController {
             HibernateUtil.buildSessionFactory(UserType.ADMIN);
         } catch (JDBCConnectionException e) {
             e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Доступ до інтернет ресурсів");
-            alert.setHeaderText("Проблеми зі з'єднанням");
-            alert.setContentText("Підключіться, будь ласка, до інтернету");
-            alert.showAndWait();
+            MainApp.showAlert(Alert.AlertType.ERROR,
+                    "Доступ до інтернет ресурсів", "Проблеми зі з'єднанням",
+                    "Підключіться, будь ласка, до інтернету");
             return null;
         }
         Session session = HibernateUtil.getSession();
@@ -73,12 +81,10 @@ public class LoginWindowController {
             }
         }
 
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Авторизація");
-        alert.setHeaderText("Будь ласка, введіть вірні ім'я користувача та пароль");
-        alert.setContentText("Невірні ім'я користувача або пароль");
-
-        alert.showAndWait();
+        MainApp.showAlert(Alert.AlertType.ERROR,
+                "Авторизація",
+                "Будь ласка, введіть вірні ім'я користувача та пароль",
+                "Невірні ім'я користувача або пароль");
         return null;
     }
 }

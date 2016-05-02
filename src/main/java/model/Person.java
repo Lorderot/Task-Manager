@@ -9,7 +9,7 @@ public class Person {
     @Id
     @Column(name = "person_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Long identifier;
     @Column(name = "first_name", length = 100)
     private String firstName;
     @Column(name = "last_name", length = 100)
@@ -63,12 +63,12 @@ public class Person {
     public Person() {
     }
 
-    public Long getId() {
-        return id;
+    public Long getIdentifier() {
+        return identifier;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setIdentifier(Long identifier) {
+        this.identifier = identifier;
     }
 
     public String getFirstName() {

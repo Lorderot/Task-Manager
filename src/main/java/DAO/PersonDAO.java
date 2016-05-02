@@ -3,6 +3,8 @@ package DAO;
 import model.Person;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
+
 import java.util.List;
 
 public class PersonDAO {
@@ -26,6 +28,16 @@ public class PersonDAO {
         } else {
             return null;
         }
+    }
 
+    public void updatePersonPassword(Person person) {
+        Transaction transaction = session.beginTransaction();
+        String sqlQuery = "update persons set password = :password where person_id = :id";
+        Query query = session.createSQLQuery(sqlQuery);
+        query.setParameter("password", person.getPassword());
+        query.setParameter("id", person.getIdentifier());
+        query.executeUpdate();
+        transaction.commit();
+        session.flush();
     }
 }
