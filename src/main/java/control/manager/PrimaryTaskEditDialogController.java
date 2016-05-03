@@ -52,16 +52,22 @@ public class PrimaryTaskEditDialogController {
                     okClicked = true;
                     primaryTaskEditDialogStage.close();
                 } else {
-                    MainApp.showAlert(Alert.AlertType.INFORMATION,
-                            "Невідома проблема",
+                    MainApp.showAlert(Alert.AlertType.ERROR,
                             "Запис не було додано",
-                            "");
+                            "Запис з пустими полями неможливо додати",
+                            "Заповніть, будь ласка, пусті поля");
                 }
             } catch (ConstraintViolationException e) {
                 MainApp.showAlert(Alert.AlertType.ERROR,
                         "Немождиво додати запис",
                         "Запис з даним іменем існує",
                         "Будь ласка, зробіть ім'я унікальним");
+            } catch (Exception e) {
+                e.printStackTrace();
+                MainApp.showAlert(Alert.AlertType.INFORMATION,
+                        "Невідома проблема",
+                        "Запис не було додано",
+                        "");
             }
         }
     }
