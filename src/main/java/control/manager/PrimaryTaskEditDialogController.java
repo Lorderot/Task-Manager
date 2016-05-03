@@ -8,6 +8,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import model.PrimaryTask;
+import org.hibernate.exception.ConstraintViolationException;
 import util.TimeUtil;
 
 public class PrimaryTaskEditDialogController {
@@ -46,9 +47,21 @@ public class PrimaryTaskEditDialogController {
             primaryTask.setTimeToComplete(TimeUtil.fromString(
                     timeToCompleteField.getText()).getTime());
             primaryTask.setDescription(descriptionTextArea.getText());
-            if (controller.addPrimaryTask(primaryTask)) {
-                okClicked = true;
-                primaryTaskEditDialogStage.close();
+            try {
+                if (controller.addPrimaryTask(primaryTask)) {
+                    okClicked = true;
+                    primaryTaskEditDialogStage.close();
+                } else {
+                    MainApp.showAlert(Alert.AlertType.INFORMATION,
+                            "Невідома проблема",
+                            "Запис не було додано",
+                            "");
+                }
+            } catch (ConstraintViolationException e) {
+                MainApp.showAlert(Alert.AlertType.ERROR,
+                        "Немождиво додати запис",
+                        "Запис з даним іменем існує",
+                        "Будь ласка, зробіть ім'я унікальним");
             }
         }
     }
