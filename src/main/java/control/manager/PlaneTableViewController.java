@@ -19,9 +19,9 @@ import util.HibernateUtil;
 import java.util.List;
 
 public class PlaneTableViewController {
+    private Session session;
     private Stage planeStage;
-    private ObservableList<Plane> observableList
-            = FXCollections.observableArrayList();
+    private ObservableList<Plane> observableList;
     @FXML
     private TableView<Plane> planeTableView;
     @FXML
@@ -42,10 +42,8 @@ public class PlaneTableViewController {
     private TextField filterField;
 
     public PlaneTableViewController() {
-        Session session = HibernateUtil.getSession();
-        List<Plane> list = new PlaneDAO(session).findAll();
-        session.close();
-        observableList.addAll(list);
+        session = HibernateUtil.getSession();
+        loadDataFromDB();
     }
 
     @FXML
@@ -64,6 +62,35 @@ public class PlaneTableViewController {
                 new PropertyValueFactory<>("availability"));
         ownerColumn.setCellValueFactory(
                 new PropertyValueFactory<>("owner"));
+        createFilter();
+    }
+
+    public void handleOk() {
+        session.close();
+        planeStage.close();
+    }
+
+    public void setPlaneStage(Stage planeStage) {
+        this.planeStage = planeStage;
+        planeStage.getScene().setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER
+                    || event.getCode() == KeyCode.ESCAPE) {
+                handleOk();
+            }
+        });
+    }
+
+    public void loadDataFromDB() {
+        List<Plane> list = new PlaneDAO(session).findAll();
+        observableList = FXCollections.observableArrayList(list);
+    }
+
+    public void updateData() {
+        loadDataFromDB();
+        createFilter();
+    }
+
+    private void createFilter() {
         FilteredList<Plane> filteredList = new FilteredList<>(
                 observableList, plane -> true);
         filterField.textProperty().addListener(((observable, oldValue, newValue) -> {
@@ -90,20 +117,5 @@ public class PlaneTableViewController {
         SortedList<Plane> sortedList = new SortedList<>(filteredList);
         sortedList.comparatorProperty().bind(planeTableView.comparatorProperty());
         planeTableView.setItems(sortedList);
-        observableList = sortedList;
-    }
-
-    public void handleOk() {
-        planeStage.close();
-    }
-
-    public void setPlaneStage(Stage planeStage) {
-        this.planeStage = planeStage;
-        planeStage.getScene().setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.ENTER
-                    || event.getCode() == KeyCode.ESCAPE) {
-                handleOk();
-            }
-        });
     }
 }

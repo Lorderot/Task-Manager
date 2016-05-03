@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import model.PrimaryTask;
 import org.hibernate.Session;
+import org.hibernate.exception.ConstraintViolationException;
 import util.HibernateUtil;
 import view.ViewParameters;
 
@@ -24,8 +25,7 @@ public class PrimaryTaskTableViewController {
     private Stage primaryTaskStage;
     private Session session;
     private MainApp mainapp;
-    private ObservableList<PrimaryTask> observableList
-            = FXCollections.observableArrayList();;
+    private ObservableList<PrimaryTask> observableList;
     private PrimaryTaskDAO primaryTaskDAO;
 
     @FXML
@@ -100,41 +100,19 @@ public class PrimaryTaskTableViewController {
         showDescription(null);
         primaryTaskTable.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> showDescription(newValue));
-        FilteredList<PrimaryTask> filteredData =
-                new FilteredList<>(observableList, p -> true);
-        filterField.textProperty().addListener(((observable, oldValue, newValue) -> {
-            filteredData.setPredicate(primaryTask -> {
-                if (newValue == null || newValue.isEmpty()) {
-                    return true;
-                }
-
-                if (primaryTask.getName().toLowerCase()
-                        .contains(newValue.toLowerCase())) {
-                    return true;
-                }
-                return false;
-            });
-        }));
-        SortedList<PrimaryTask> sortedData =
-                new SortedList<>(filteredData);
-        sortedData.comparatorProperty().bind(primaryTaskTable.comparatorProperty());
-        primaryTaskTable.setItems(sortedData);
-        observableList = sortedData;
+        createFilter();
     }
 
     public void handleAdd() {
         mainapp.showPrimaryTaskEditDialog(this);
     }
 
-    public boolean addPrimaryTask(PrimaryTask primaryTask) {
+    public boolean addPrimaryTask(PrimaryTask primaryTask)
+            throws ConstraintViolationException {
         if (primaryTaskDAO.add(primaryTask)) {
-            observableList.addAll(primaryTask);
+            observableList.add(primaryTask);
             return true;
         }
-        MainApp.showAlert(Alert.AlertType.ERROR,
-                "Немождиво додати запис",
-                "Запис з даним іменем існує",
-                "Будь ласка, зробіть ім'я унікальним");
         return false;
     }
 
@@ -159,7 +137,34 @@ public class PrimaryTaskTableViewController {
 
     public void loadDataFromDB() {
         List<PrimaryTask> list = primaryTaskDAO.findAll();
-        observableList.addAll(list);
+        observableList = FXCollections.observableArrayList(list);
+    }
+
+    public void updateData() {
+        loadDataFromDB();
+        createFilter();
+    }
+
+    private void createFilter() {
+        FilteredList<PrimaryTask> filteredData =
+                new FilteredList<>(observableList, p -> true);
+        filterField.textProperty().addListener(((observable, oldValue, newValue) -> {
+            filteredData.setPredicate(primaryTask -> {
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+
+                if (primaryTask.getName().toLowerCase()
+                        .contains(newValue.toLowerCase())) {
+                    return true;
+                }
+                return false;
+            });
+        }));
+        SortedList<PrimaryTask> sortedData =
+                new SortedList<>(filteredData);
+        sortedData.comparatorProperty().bind(primaryTaskTable.comparatorProperty());
+        primaryTaskTable.setItems(sortedData);
     }
 
     private void showDescription(PrimaryTask primaryTask) {
