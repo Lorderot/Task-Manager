@@ -30,52 +30,59 @@
    <center>
       <AnchorPane prefHeight="437.0" prefWidth="810.0" BorderPane.alignment="CENTER">
          <children>
-            <TableView prefHeight="454.0" prefWidth="653.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <TextField fx:id="filterField" layoutX="119.0" layoutY="4.0" prefHeight="25.0" prefWidth="533.0" />
+            <Button layoutX="673.0" layoutY="166.0" mnemonicParsing="false" onAction="#handleShowProfile" text="Показати профіль" AnchorPane.leftAnchor="673.0" />
+            <Label layoutX="673.0" layoutY="41.0" text="Ім'я:" AnchorPane.leftAnchor="673.0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="673.0" layoutY="81.0" text="Прізвище:" AnchorPane.leftAnchor="673.0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="673.0" layoutY="125.0" text="Тип доступу:" AnchorPane.leftAnchor="673.0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Button layoutX="674.0" layoutY="215.0" mnemonicParsing="false" onAction="#handleChangePassword" text="Змінити пароль" AnchorPane.leftAnchor="674.0" />
+            <Button layoutX="674.0" layoutY="266.0" mnemonicParsing="false" onAction="#updateData" prefHeight="25.0" prefWidth="97.0" text="Оновити дані" />
+            <Button layoutX="674.0" layoutY="317.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="156.0" text="Показати деталі проекту" AnchorPane.leftAnchor="674.0" />
+            <Button layoutX="676.0" layoutY="369.0" mnemonicParsing="false" onAction="#handleExit" text="Вийти" AnchorPane.leftAnchor="676.0" />
+            <TableView fx:id="problemTableView" layoutY="35.0" prefHeight="419.0" prefWidth="653.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="35.0">
               <columns>
-                <TableColumn prefWidth="75.0" text="Творець">
+                <TableColumn prefWidth="75.0" resizable="false" text="Творець">
                      <columns>
-                        <TableColumn prefWidth="69.0" text="Ім'я" />
-                        <TableColumn prefWidth="81.0" text="Прізвище" />
+                        <TableColumn fx:id="firstNameCreatorField" prefWidth="69.0" resizable="false" text="Ім'я" />
+                        <TableColumn fx:id="lastNameCreatorField" prefWidth="81.0" resizable="false" text="Прізвище" />
                      </columns>
                   </TableColumn>
-                <TableColumn prefWidth="81.0" text="Літак" />
-                  <TableColumn text="Проект" />
-                  <TableColumn prefWidth="64.0" text="Пріорітет" />
-                  <TableColumn prefWidth="91.0" text="Оновлення" />
-                  <TableColumn prefWidth="93.0" text="Дедлайн" />
-                  <TableColumn prefWidth="93.0" text="Закінчений" />
+                <TableColumn fx:id="planeNameField" prefWidth="96.0" resizable="false" text="Літак" />
+                  <TableColumn fx:id="problemNameField" prefWidth="115.0" resizable="false" text="Проект" />
+                  <TableColumn fx:id="priorityField" prefWidth="72.0" resizable="false" text="Пріорітет" />
+                  <TableColumn fx:id="updateField" prefWidth="82.0" resizable="false" text="Оновлення" />
+                  <TableColumn fx:id="deadlineField" prefWidth="79.0" resizable="false" text="Дедлайн" />
+                  <TableColumn fx:id="isFinishedField" prefWidth="58.0" resizable="false" text="Закінчений" />
               </columns>
             </TableView>
-            <Button layoutX="612.0" layoutY="118.0" mnemonicParsing="false" onAction="#handleShowProfile" text="Показати профіль" AnchorPane.leftAnchor="673.0" />
-            <Label layoutX="612.0" layoutY="14.0" text="Ім'я:" AnchorPane.leftAnchor="673.0">
+            <Label fx:id="firstNameLabel" layoutX="762.0" layoutY="41.0" prefHeight="17.0" prefWidth="119.0" AnchorPane.leftAnchor="762.0">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label layoutX="673.0" layoutY="41.0" text="Прізвище:" AnchorPane.leftAnchor="673.0">
+            <Label fx:id="lastNameLabel" layoutX="763.0" layoutY="81.0" prefHeight="17.0" prefWidth="118.0" AnchorPane.leftAnchor="763.0">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label layoutX="673.0" layoutY="72.0" text="Тип доступу:" AnchorPane.leftAnchor="673.0">
+            <Label fx:id="userTypeLabel" layoutX="764.0" layoutY="125.0" prefHeight="17.0" prefWidth="120.0" AnchorPane.leftAnchor="764.0">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Button layoutX="612.0" layoutY="163.0" mnemonicParsing="false" onAction="#handleChangePassword" text="Змінити пароль" AnchorPane.leftAnchor="673.0" />
-            <Button layoutX="612.0" layoutY="209.0" mnemonicParsing="false" text="Показати деталі проекту" AnchorPane.leftAnchor="673.0" />
-            <Button layoutX="674.0" layoutY="253.0" mnemonicParsing="false" onAction="#handleExit" text="Вийти" AnchorPane.leftAnchor="673.0" />
-            <Label fx:id="firstNameLabel" layoutX="761.0" layoutY="14.0" prefHeight="17.0" prefWidth="119.0" AnchorPane.leftAnchor="761.0">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Label>
-            <Label fx:id="lastNameLabel" layoutX="761.0" layoutY="41.0" prefHeight="17.0" prefWidth="118.0" AnchorPane.leftAnchor="761.0">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Label>
-            <Label fx:id="userTypeLabel" layoutX="760.0" layoutY="72.0" prefHeight="17.0" prefWidth="120.0" AnchorPane.leftAnchor="760.0">
+            <Label layoutX="8.0" layoutY="6.0" text="Фільтр таблиці:">
                <font>
                   <Font size="14.0" />
                </font>

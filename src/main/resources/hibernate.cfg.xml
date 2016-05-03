@@ -14,8 +14,9 @@
     <property name="show_sql">true</property>
 
     <mapping class="model.Person" />
-    <mapping class="model.PrimaryTask"/>
+    <mapping class="model.PrimaryTask" />
     <mapping class="model.Plane" />
+    <mapping class ="model.Problem" />
 
     <!-- DB schema will be updated if needed -->
     <!-- <property name="hbm2ddl.auto">update</property> -->

@@ -57,6 +57,7 @@ public class MainApp extends Application {
             mainStage.setScene(scene);
             ManagerMainWindowController controller = loader.getController();
             controller.setPerson(person);
+            controller.loadData();
             controller.setMainStage(mainStage);
             controller.setMainApp(this);
             mainStage.show();
