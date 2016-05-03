@@ -23,11 +23,17 @@ public class HibernateUtil {
                 serviceBuilder.build());
     }
 
+    public static boolean isFactoryClosed() {
+        return sessionFactory == null;
+    }
+
     public static Session getSession() {
         return sessionFactory.openSession();
     }
 
     public static void shutDown() {
-        sessionFactory.close();
+        if (sessionFactory != null) {
+            sessionFactory.close();
+        }
     }
 }
