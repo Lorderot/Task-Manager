@@ -141,6 +141,9 @@ public class PrimaryTaskTableViewController {
     }
 
     public void updateData() {
+        session.close();
+        session = HibernateUtil.getSession();
+        primaryTaskDAO.changeSession(session);
         loadDataFromDB();
         createFilter();
     }

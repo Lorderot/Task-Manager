@@ -54,4 +54,8 @@ public class PrimaryTaskDAO {
         }
         return false;
     }
+
+    public void changeSession(Session session) {
+        this.session = session;
+    }
 }

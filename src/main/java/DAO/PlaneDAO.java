@@ -26,4 +26,8 @@ public class PlaneDAO {
         session.flush();
         return list;
     }
+
+    public void changeSession(Session session) {
+        this.session = session;
+    }
 }

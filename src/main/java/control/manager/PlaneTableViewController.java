@@ -20,6 +20,7 @@ import java.util.List;
 
 public class PlaneTableViewController {
     private Session session;
+    private PlaneDAO planeDAO;
     private Stage planeStage;
     private ObservableList<Plane> observableList;
     @FXML
@@ -43,6 +44,7 @@ public class PlaneTableViewController {
 
     public PlaneTableViewController() {
         session = HibernateUtil.getSession();
+        planeDAO = new PlaneDAO(session);
         loadDataFromDB();
     }
 
@@ -81,11 +83,14 @@ public class PlaneTableViewController {
     }
 
     public void loadDataFromDB() {
-        List<Plane> list = new PlaneDAO(session).findAll();
+        List<Plane> list = planeDAO.findAll();
         observableList = FXCollections.observableArrayList(list);
     }
 
     public void updateData() {
+        session.close();
+        session = HibernateUtil.getSession();
+        planeDAO.changeSession(session);
         loadDataFromDB();
         createFilter();
     }
@@ -99,16 +104,17 @@ public class PlaneTableViewController {
                     return true;
                 }
 
+                String lowerCasedNeValue = newValue.toLowerCase();
                 if (plane.getName().toLowerCase()
-                        .contains(newValue.toLowerCase())) {
+                        .contains(lowerCasedNeValue)) {
                     return true;
                 }
                 if (plane.getOwner().toLowerCase()
-                        .contains(newValue.toLowerCase())) {
+                        .contains(lowerCasedNeValue)) {
                     return true;
                 }
                 if (plane.getType().toLowerCase()
-                        .contains(newValue.toLowerCase())) {
+                        .contains(lowerCasedNeValue)) {
                     return true;
                 }
                 return false;
