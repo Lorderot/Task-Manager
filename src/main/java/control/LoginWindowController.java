@@ -15,6 +15,7 @@ import org.hibernate.exception.JDBCConnectionException;
 import util.HibernateUtil;
 
 public class LoginWindowController {
+    private Session session;
     @FXML
     private TextField userNameField;
     @FXML
@@ -51,6 +52,8 @@ public class LoginWindowController {
     public void handleLogin() {
         Person person = authentication();
         if (person != null) {
+            session.close();
+            HibernateUtil.shutDown();
             HibernateUtil.buildSessionFactory(person.getUserType());
             this.person = person;
             loginStage.close();
@@ -58,12 +61,15 @@ public class LoginWindowController {
     }
 
     public void handleExit() {
+        session.close();
         loginStage.close();
     }
 
     private Person authentication() {
         try {
-            HibernateUtil.buildSessionFactory(UserType.ADMIN);
+            if (HibernateUtil.isFactoryClosed()) {
+                HibernateUtil.buildSessionFactory(UserType.ADMIN);
+            }
         } catch (JDBCConnectionException e) {
             e.printStackTrace();
             MainApp.showAlert(Alert.AlertType.ERROR,
@@ -71,16 +77,16 @@ public class LoginWindowController {
                     "Підключіться, будь ласка, до інтернету");
             return null;
         }
-        Session session = HibernateUtil.getSession();
+        if (session == null) {
+            session = HibernateUtil.getSession();
+        }
         PersonDAO personDAO = new PersonDAO(session);
         Person person = personDAO.findPersonByLogin(userNameField.getText());
-        session.close();
         if (person != null) {
             if (person.getPassword().equals(passwordField.getText())) {
                 return person;
             }
         }
-
         MainApp.showAlert(Alert.AlertType.ERROR,
                 "Авторизація",
                 "Будь ласка, введіть вірні ім'я користувача та пароль",
