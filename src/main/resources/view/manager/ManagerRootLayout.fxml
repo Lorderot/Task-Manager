@@ -28,7 +28,7 @@
       </MenuBar>
    </top>
    <center>
-      <AnchorPane prefHeight="437.0" prefWidth="810.0" BorderPane.alignment="CENTER">
+      <AnchorPane prefHeight="454.0" prefWidth="864.0" BorderPane.alignment="CENTER">
          <children>
             <TextField fx:id="filterField" layoutX="119.0" layoutY="4.0" prefHeight="25.0" prefWidth="533.0" />
             <Button layoutX="673.0" layoutY="166.0" mnemonicParsing="false" onAction="#handleShowProfile" text="Показати профіль" AnchorPane.leftAnchor="673.0" />
@@ -49,7 +49,7 @@
             </Label>
             <Button layoutX="674.0" layoutY="215.0" mnemonicParsing="false" onAction="#handleChangePassword" text="Змінити пароль" AnchorPane.leftAnchor="674.0" />
             <Button layoutX="674.0" layoutY="266.0" mnemonicParsing="false" onAction="#updateData" prefHeight="25.0" prefWidth="97.0" text="Оновити дані" />
-            <Button layoutX="674.0" layoutY="317.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="156.0" text="Показати деталі проекту" AnchorPane.leftAnchor="674.0" />
+            <Button layoutX="674.0" layoutY="317.0" mnemonicParsing="false" onAction="#handleChooseProblem" prefHeight="25.0" prefWidth="109.0" text="Вибрати проект" AnchorPane.leftAnchor="674.0" />
             <Button layoutX="676.0" layoutY="369.0" mnemonicParsing="false" onAction="#handleExit" text="Вийти" AnchorPane.leftAnchor="676.0" />
             <TableView fx:id="problemTableView" layoutY="35.0" prefHeight="419.0" prefWidth="653.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="35.0">
               <columns>

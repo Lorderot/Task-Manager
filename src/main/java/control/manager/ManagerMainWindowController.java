@@ -9,10 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import model.Person;
 import model.Problem;
@@ -113,6 +110,18 @@ public class ManagerMainWindowController {
         mainApp.showProfile(person);
     }
 
+    public void handleChooseProblem() {
+        Problem selectedProblem = problemTableView.getSelectionModel()
+                .selectedItemProperty().get();
+        if (selectedProblem == null) {
+            MainApp.showAlert(Alert.AlertType.ERROR, "",
+                    "Не вибрано проект!",
+                    "Виберіть, будь ласка, проект!");
+        } else {
+            mainApp.showProblemDetails(selectedProblem);
+        }
+    }
+
     public void handleExit() {
         session.close();
         HibernateUtil.shutDown();
@@ -128,8 +137,7 @@ public class ManagerMainWindowController {
         session.close();
         session = HibernateUtil.getSession();
         problemDAO.changeSession(session);
-        loadDataFromDB();
-        createFilter();
+        loadData();
     }
 
     public void setMainStage(Stage mainStage) {

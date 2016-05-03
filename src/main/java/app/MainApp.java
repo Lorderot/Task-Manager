@@ -3,10 +3,7 @@ package app;
 import control.LoginWindowController;
 import control.PasswordEditDialogController;
 import control.ProfileController;
-import control.manager.ManagerMainWindowController;
-import control.manager.PlaneTableViewController;
-import control.manager.PrimaryTaskEditDialogController;
-import control.manager.PrimaryTaskTableViewController;
+import control.manager.*;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -17,6 +14,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.Person;
+import model.Problem;
 import util.HibernateUtil;
 
 import java.io.IOException;
@@ -29,7 +27,7 @@ public class MainApp extends Application {
     public void start(Stage primaryStage) throws Exception{
         this.mainStage = primaryStage;
         mainStage.setOnCloseRequest((windowEvent) -> HibernateUtil.shutDown());
-        mainStage.setTitle("Task manager");
+        mainStage.setTitle("Менеджер робіт");
         Person person = showLoginWindow();
         if (person == null) {
             mainStage.close();
@@ -200,6 +198,27 @@ public class MainApp extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void showProblemDetails(Problem problem) {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/view/manager/ProblemDetails.fxml"));
+            AnchorPane root = loader.load();
+
+            Stage problemDetails = new Stage();
+            problemDetails.setTitle("Проект");
+            problemDetails.setScene(new Scene(root));
+            problemDetails.initOwner(mainStage);
+            problemDetails.initModality(Modality.WINDOW_MODAL);
+            ProblemDetailsController controller = loader.getController();
+            controller.setStage(problemDetails);
+            controller.setProblem(problem);
+            problemDetails.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public static void showAlert(Alert.AlertType type, String title,
