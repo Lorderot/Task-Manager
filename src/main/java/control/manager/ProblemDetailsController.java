@@ -1,6 +1,9 @@
 package control.manager;
 
 import DAO.TaskDAO;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -39,7 +42,7 @@ public class ProblemDetailsController {
     @FXML
     private TextArea problemDescriptionTextArea;
     @FXML
-    private TextArea primaryTaskDescriptionTextArea;
+    private TextArea taskDescriptionTextArea;
     @FXML
     private TextField problemNameField;
     @FXML
@@ -53,11 +56,33 @@ public class ProblemDetailsController {
 
     @FXML
     public void initialize() {
-
+        nameTaskColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue()
+                        .getPrimaryTask().getName()));
+        createDateColumn.setCellValueFactory(cellData ->
+                new SimpleObjectProperty<>(cellData.getValue().getCreateDate()));
+        deadlineColumn.setCellValueFactory(cellData ->
+                new SimpleObjectProperty<>(cellData.getValue().getDeadline()));
+        priorityColumn.setCellValueFactory(cellData ->
+                new ReadOnlyObjectWrapper<>(cellData.getValue().getPriority()));
+        amountColumn.setCellValueFactory(cellData ->
+                new ReadOnlyObjectWrapper<>(cellData.getValue().getAmount()));
+        descriptionColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getDescription()));
+        problemNameField.setEditable(false);
+        createDateField.setEditable(false);
+        deadlineField.setEditable(false);
+        taskDescriptionTextArea.setEditable(false);
+        problemDescriptionTextArea.setEditable(false);
+        showDescription(null);
+        taskTableView.getSelectionModel().selectedItemProperty()
+                .addListener(((observable, oldValue, newValue) -> {
+                    showDescription(newValue);
+                }));
     }
 
     public ProblemDetailsController() {
-        Session session = HibernateUtil.getSession();
+        session = HibernateUtil.getSession();
         taskDAO = new TaskDAO(session);
     }
 
@@ -71,6 +96,28 @@ public class ProblemDetailsController {
     public void loadData() {
         loadDataFromDB();
         createFilter();
+    }
+
+    public void setProblem(Problem problem) {
+        this.problem = problem;
+        priorityLabel.setText(problem.getPriority().toString());
+        createDateField.setText(problem.getCreateDate().toString());
+        deadlineField.setText(problem.getDeadline().toString());
+        problemNameField.setText(problem.getName());
+        problemDescriptionTextArea.setText(problem.getDescription());
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
+    private void showDescription(Task task) {
+        if (task == null) {
+            taskDescriptionTextArea.setText("");
+        } else {
+            taskDescriptionTextArea.setText(task.getPrimaryTask()
+                    .getDescription());
+        }
     }
 
     private void loadDataFromDB() {
@@ -87,7 +134,8 @@ public class ProblemDetailsController {
                     return true;
                 }
                 String lowerCasedNewValue = newValue.toLowerCase();
-                if (task.getPrimaryTask().getName().contains(lowerCasedNewValue)) {
+                if (task.getPrimaryTask().getName().toLowerCase()
+                        .contains(lowerCasedNewValue)) {
                     return true;
                 }
                 return false;
@@ -95,13 +143,5 @@ public class ProblemDetailsController {
         }));
         SortedList<Task> sortedList = new SortedList<>(filteredList);
         taskTableView.setItems(sortedList);
-    }
-
-    public void setProblem(Problem problem) {
-        this.problem = problem;
-    }
-
-    public void setStage(Stage stage) {
-        this.stage = stage;
     }
 }

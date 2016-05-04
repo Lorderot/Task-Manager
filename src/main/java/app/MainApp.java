@@ -214,6 +214,7 @@ public class MainApp extends Application {
             ProblemDetailsController controller = loader.getController();
             controller.setStage(problemDetails);
             controller.setProblem(problem);
+            controller.loadData();
             problemDetails.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();

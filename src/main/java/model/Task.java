@@ -25,13 +25,15 @@ public class Task {
     private Integer priority;
     @Column(name = "amount_of_primary_task")
     private Integer amount;
+    @Column(name = "description")
+    private String description;
 
     public Task() {
     }
 
     public Task(Integer identifier, Problem problem, PrimaryTask primaryTask,
                 Date createDate, Date deadline, Integer priority,
-                Integer amount, String name, String description) {
+                Integer amount, String description) {
         this.identifier = identifier;
         this.problem = problem;
         this.primaryTask = primaryTask;
@@ -39,6 +41,7 @@ public class Task {
         this.deadline = deadline;
         this.priority = priority;
         this.amount = amount;
+        this.description = description;
     }
 
     public Integer getIdentifier() {
@@ -95,5 +98,13 @@ public class Task {
 
     public void setAmount(Integer amount) {
         this.amount = amount;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
