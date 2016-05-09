@@ -1,6 +1,7 @@
 package control.manager;
 
 import DAO.TaskDAO;
+import app.MainApp;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -21,6 +22,7 @@ import java.util.List;
 
 public class ProblemDetailsController {
     private Stage stage;
+    private MainApp mainApp;
     private Problem problem;
     private Session session;
     private TaskDAO taskDAO;
@@ -93,6 +95,19 @@ public class ProblemDetailsController {
         loadData();
     }
 
+    public void handleExit() {
+        session.close();
+        stage.close();
+    }
+
+    public void handleShowProfile() {
+        mainApp.showProfile(problem.getCreator());
+    }
+
+    public void handleShowPlane() {
+        mainApp.showPlane(problem.getPlane(), stage);
+    }
+
     public void loadData() {
         loadDataFromDB();
         createFilter();
@@ -109,6 +124,10 @@ public class ProblemDetailsController {
 
     public void setStage(Stage stage) {
         this.stage = stage;
+    }
+
+    public void setMainApp(MainApp mainApp) {
+        this.mainApp = mainApp;
     }
 
     private void showDescription(Task task) {

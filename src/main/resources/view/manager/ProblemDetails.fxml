@@ -18,11 +18,11 @@
          <children>
             <Button layoutX="14.0" layoutY="369.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="116.0" text="Нове завдання" />
             <Button layoutX="149.0" layoutY="369.0" mnemonicParsing="false" text="Запити у відділ кадрів" />
-            <Button layoutX="305.0" layoutY="369.0" mnemonicParsing="false" text="Профіль творця" />
+            <Button layoutX="305.0" layoutY="369.0" mnemonicParsing="false" onAction="#handleShowProfile" text="Профіль творця" />
             <Button layoutX="14.0" layoutY="408.0" mnemonicParsing="false" text="Вибрати завдання" />
-            <Button layoutX="149.0" layoutY="408.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="137.0" text="Інформація про літак" />
+            <Button layoutX="149.0" layoutY="408.0" mnemonicParsing="false" onAction="#handleShowPlane" prefHeight="25.0" prefWidth="137.0" text="Інформація про літак" />
             <Button layoutX="305.0" layoutY="408.0" mnemonicParsing="false" onAction="#updateData" prefHeight="25.0" prefWidth="105.0" text="Оновити дані" />
-            <Button layoutX="434.0" layoutY="408.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="91.0" text="Вийти" />
+            <Button layoutX="434.0" layoutY="408.0" mnemonicParsing="false" onAction="#handleExit" prefHeight="25.0" prefWidth="91.0" text="Вийти" />
          </children>
       </Group>
       <TableView fx:id="taskTableView" layoutX="14.0" layoutY="44.0" prefHeight="316.0" prefWidth="512.0" AnchorPane.bottomAnchor="81.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="447.0" AnchorPane.topAnchor="44.0">

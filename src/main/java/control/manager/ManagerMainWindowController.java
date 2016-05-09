@@ -94,7 +94,7 @@ public class ManagerMainWindowController {
     }
 
     public void handlePlanes() {
-        mainApp.showPlane();
+        mainApp.showPlaneTable();
     }
 
     public void handleChangePassword() {

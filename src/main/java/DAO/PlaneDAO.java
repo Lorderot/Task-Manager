@@ -27,6 +27,13 @@ public class PlaneDAO {
         return list;
     }
 
+    public void update(Plane plane) {
+        Transaction transaction = session.beginTransaction();
+        session.update(plane);
+        transaction.commit();
+        session.flush();
+    }
+
     public void changeSession(Session session) {
         this.session = session;
     }

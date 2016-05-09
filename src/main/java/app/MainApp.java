@@ -2,6 +2,7 @@ package app;
 
 import control.LoginWindowController;
 import control.PasswordEditDialogController;
+import control.PlaneController;
 import control.ProfileController;
 import control.manager.*;
 import javafx.application.Application;
@@ -14,6 +15,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.Person;
+import model.Plane;
 import model.Problem;
 import util.HibernateUtil;
 
@@ -181,7 +183,7 @@ public class MainApp extends Application {
         }
     }
 
-    public void showPlane() {
+    public void showPlaneTable() {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("/view/manager/PlaneTableView.fxml"));
@@ -215,11 +217,31 @@ public class MainApp extends Application {
             controller.setStage(problemDetails);
             controller.setProblem(problem);
             controller.loadData();
+            controller.setMainApp(this);
             problemDetails.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
+    public void showPlane(Plane plane, Stage stage) {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/view/Plane.fxml"));
+            AnchorPane root = loader.load();
+
+            Stage planeStage = new Stage();
+            planeStage.setTitle("Літак");
+            planeStage.setScene(new Scene(root));
+            planeStage.initOwner(stage);
+            planeStage.initModality(Modality.WINDOW_MODAL);
+            PlaneController controller = loader.getController();
+            controller.setPlaneStage(planeStage);
+            controller.setPlane(plane);
+            planeStage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void showAlert(Alert.AlertType type, String title,
