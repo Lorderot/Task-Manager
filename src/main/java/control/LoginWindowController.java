@@ -61,7 +61,9 @@ public class LoginWindowController {
     }
 
     public void handleExit() {
-        session.close();
+        if (session != null) {
+            session.close();
+        }
         loginStage.close();
     }
 
