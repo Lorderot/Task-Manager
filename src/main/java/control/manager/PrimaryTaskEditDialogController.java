@@ -28,7 +28,7 @@ public class PrimaryTaskEditDialogController {
 
     @FXML
     public void initialize() {
-        timeToCompleteField.setPromptText("hh:mm:ss");
+        timeToCompleteField.setPromptText(TimeUtil.TIME_FORMAT);
         primaryTask = new PrimaryTask();
     }
 

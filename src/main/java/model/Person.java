@@ -8,8 +8,7 @@ import java.util.Date;
 public class Person {
     @Id
     @Column(name = "person_id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long identifier;
+    private Integer identifier;
     @Column(name = "first_name", length = 100)
     private String firstName;
     @Column(name = "last_name", length = 100)
@@ -40,11 +39,10 @@ public class Person {
     @Column(name = "access_type")
     private String userType;
 
-
     public Person(String firstName, String lastName, Date dateIn, Date dateOut,
                   String education, String login, String password, String salt,
                   Date birthday, Integer phone_number, String email,
-                  String skype, String userType) {
+                  String skype, String userType, Integer identifier) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateIn = dateIn;
@@ -58,16 +56,17 @@ public class Person {
         this.email = email;
         this.skype = skype;
         this.userType = userType;
+        this.identifier = identifier;
     }
 
     public Person() {
     }
 
-    public Long getIdentifier() {
+    public Integer getIdentifier() {
         return identifier;
     }
 
-    public void setIdentifier(Long identifier) {
+    public void setIdentifier(Integer identifier) {
         this.identifier = identifier;
     }
 

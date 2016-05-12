@@ -88,11 +88,15 @@ public class PlaneTableViewController {
     }
 
     public void updateData() {
+        filterField.setText("");
         session.close();
         session = HibernateUtil.getSession();
-        planeDAO.changeSession(session);
+        planeDAO.setSession(session);
         loadDataFromDB();
         createFilter();
+        String refresh = filterField.getText();
+        filterField.setText("");
+        filterField.setText(refresh);
     }
 
     private void createFilter() {

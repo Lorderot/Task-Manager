@@ -34,7 +34,7 @@ public class PlaneDAO {
         session.flush();
     }
 
-    public void changeSession(Session session) {
+    public void setSession(Session session) {
         this.session = session;
     }
 }

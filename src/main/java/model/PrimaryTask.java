@@ -2,7 +2,6 @@ package model;
 
 import javax.persistence.*;
 import java.sql.Time;
-import java.util.Random;
 
 @Entity
 @Table(name = "primary_tasks")

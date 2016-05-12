@@ -16,15 +16,16 @@ import util.HibernateUtil;
 
 public class LoginWindowController {
     private Session session;
+    private PersonDAO personDAO;
+    private Stage loginStage;
+    private Person person;
     @FXML
     private TextField userNameField;
     @FXML
     private PasswordField passwordField;
 
-    private Stage loginStage;
-    private Person person;
-
     public LoginWindowController() {
+        createConnection();
     }
 
     @FXML
@@ -50,6 +51,9 @@ public class LoginWindowController {
     }
 
     public void handleLogin() {
+        if (HibernateUtil.isFactoryClosed()) {
+            createConnection();
+        }
         Person person = authentication();
         if (person != null) {
             session.close();
@@ -61,28 +65,12 @@ public class LoginWindowController {
     }
 
     public void handleExit() {
-        if (session != null) {
-            session.close();
-        }
+        session.close();
+        HibernateUtil.shutDown();
         loginStage.close();
     }
 
     private Person authentication() {
-        try {
-            if (HibernateUtil.isFactoryClosed()) {
-                HibernateUtil.buildSessionFactory(UserType.ADMIN);
-            }
-        } catch (JDBCConnectionException e) {
-            e.printStackTrace();
-            MainApp.showAlert(Alert.AlertType.ERROR,
-                    "Доступ до інтернет ресурсів", "Проблеми зі з'єднанням",
-                    "Підключіться, будь ласка, до інтернету");
-            return null;
-        }
-        if (session == null) {
-            session = HibernateUtil.getSession();
-        }
-        PersonDAO personDAO = new PersonDAO(session);
         Person person = personDAO.findPersonByLogin(userNameField.getText());
         if (person != null) {
             if (person.getPassword().equals(passwordField.getText())) {
@@ -94,5 +82,21 @@ public class LoginWindowController {
                 "Будь ласка, введіть вірні ім'я користувача та пароль",
                 "Невірні ім'я користувача або пароль");
         return null;
+    }
+
+    private void createConnection() {
+        try {
+            if (HibernateUtil.isFactoryClosed()) {
+                HibernateUtil.buildSessionFactory(UserType.ADMIN);
+            }
+        } catch (JDBCConnectionException e) {
+            e.printStackTrace();
+            MainApp.showAlert(Alert.AlertType.ERROR,
+                    "Доступ до інтернет ресурсів", "Проблеми зі з'єднанням",
+                    "Підключіться, будь ласка, до інтернету");
+            return;
+        }
+        session = HibernateUtil.getSession();
+        personDAO = new PersonDAO(session);
     }
 }

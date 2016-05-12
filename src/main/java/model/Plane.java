@@ -1,9 +1,6 @@
 package model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "planes")
@@ -14,9 +11,9 @@ public class Plane {
     @Column(name = "name", length = 100)
     private String name;
     @Column(name = "technical_status")
-    private Character technicalStatus;
+    private Boolean technicalStatus;
     @Column(name = "fuel_status")
-    private Character fuelStatus;
+    private Boolean fuelStatus;
     @Column(name = "type", length = 20)
     private String type;
     @Column(name = "available")
@@ -27,19 +24,6 @@ public class Plane {
     private String owner;
 
     public Plane() {
-    }
-
-    public Plane(Integer identifier, String name, Character technicalStatus,
-                 Character fuelStatus, String type, Boolean available,
-                 Integer capacity, String owner) {
-        this.identifier = identifier;
-        this.name = name;
-        this.technicalStatus = technicalStatus;
-        this.fuelStatus = fuelStatus;
-        this.type = type;
-        this.availability = available;
-        this.capacity = capacity;
-        this.owner = owner;
     }
 
     public Integer getIdentifier() {
@@ -58,19 +42,19 @@ public class Plane {
         this.name = name;
     }
 
-    public Character getTechnicalStatus() {
+    public Boolean getTechnicalStatus() {
         return technicalStatus;
     }
 
-    public void setTechnicalStatus(Character technicalStatus) {
+    public void setTechnicalStatus(Boolean technicalStatus) {
         this.technicalStatus = technicalStatus;
     }
 
-    public Character getFuelStatus() {
+    public Boolean getFuelStatus() {
         return fuelStatus;
     }
 
-    public void setFuelStatus(Character fuelStatus) {
+    public void setFuelStatus(Boolean fuelStatus) {
         this.fuelStatus = fuelStatus;
     }
 
