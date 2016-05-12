@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="506.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="control.manager.RequestTableViewController">
+   <children>
+      <TextField fx:id="filterField" layoutX="115.0" layoutY="3.0" prefHeight="25.0" prefWidth="595.0" AnchorPane.leftAnchor="115.0" AnchorPane.rightAnchor="240.0" AnchorPane.topAnchor="3.0" />
+      <Label layoutX="7.0" layoutY="5.0" text="Фільтр таблиці:" AnchorPane.leftAnchor="7.0" AnchorPane.topAnchor="5.0">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="816.0" layoutY="6.0" text="Запит:" AnchorPane.rightAnchor="97.0" AnchorPane.topAnchor="6.0">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Label>
+      <Group layoutX="14.0" layoutY="5.0" AnchorPane.bottomAnchor="8.0">
+         <children>
+            <Button layoutX="350.0" layoutY="462.0" mnemonicParsing="false" onAction="#updateData" prefHeight="30.0" prefWidth="98.0" text="Оновити дані" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="497.0" />
+            <Button layoutX="10.0" layoutY="462.0" mnemonicParsing="false" onAction="#handleMoveToTask" prefHeight="30.0" prefWidth="134.0" text="Перейти до завдання" AnchorPane.bottomAnchor="14.0" />
+            <Button layoutX="618.0" layoutY="461.0" mnemonicParsing="false" onAction="#handleExit" prefHeight="30.0" prefWidth="77.0" text="Вийти" AnchorPane.bottomAnchor="-460.0" AnchorPane.rightAnchor="4.0" />
+            <Button layoutX="180.0" layoutY="462.0" mnemonicParsing="false" onAction="#handleShowProfile" prefHeight="30.0" prefWidth="134.0" text="Профіль робітника" AnchorPane.bottomAnchor="-460.0" />
+            <Button layoutX="484.0" layoutY="462.0" mnemonicParsing="false" onAction="#handleShowSkills" prefHeight="30.0" prefWidth="98.0" text="Перелік вмінь" AnchorPane.bottomAnchor="-462.0" AnchorPane.rightAnchor="107.0" />
+         </children>
+      </Group>
+      <TableView fx:id="requestTableView" layoutY="28.0" prefHeight="434.0" prefWidth="709.0" AnchorPane.bottomAnchor="44.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="241.0" AnchorPane.topAnchor="28.0">
+        <columns>
+            <TableColumn prefWidth="500.0" text="Робітник">
+               <columns>
+                  <TableColumn fx:id="firstNameColumn" prefWidth="120.0" text="Ім'я" />
+                  <TableColumn fx:id="lastNameColumn" prefWidth="170.0" text="Прізвище" />
+               </columns>
+            </TableColumn>
+            <TableColumn fx:id="requestDateColumn" minWidth="0.0" prefWidth="133.0" text="Дата запиту" />
+            <TableColumn fx:id="respondDateColumn" prefWidth="109.0" text="Дата відповіді" />
+            <TableColumn fx:id="taskNameColumn" prefWidth="176.0" text="Завдання" />
+        </columns>
+      </TableView>
+      <TextArea fx:id="requestDescriptionTextArea" layoutX="721.0" layoutY="28.0" prefHeight="219.0" prefWidth="226.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="28.0" />
+      <Label layoutX="803.0" layoutY="253.0" text="Відповідь:" AnchorPane.rightAnchor="83.0" AnchorPane.topAnchor="253.0">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <TextArea fx:id="respondDescriptionTextArea" layoutX="722.0" layoutY="273.0" prefHeight="219.0" prefWidth="226.0" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="273.0" />
+   </children>
+</AnchorPane>

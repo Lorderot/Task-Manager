@@ -91,13 +91,29 @@ public class ProblemDetailsController {
     public void updateData() {
         session.close();
         session = HibernateUtil.getSession();
-        taskDAO.changeSession(session);
+        taskDAO.setSession(session);
         loadData();
+        createFilter();
+        String refresh = filterField.getText();
+        filterField.setText("");
+        filterField.setText(refresh);
     }
 
     public void handleExit() {
         session.close();
         stage.close();
+    }
+
+    public void handleShowTaskDetails() {
+        Task selectedTask = taskTableView.getSelectionModel()
+                .selectedItemProperty().get();
+        if (selectedTask == null) {
+            MainApp.showAlert(Alert.AlertType.ERROR, "",
+                    "Не вибрано завдання!",
+                    "Виберіть, будь ласка, завдання!");
+        } else {
+            mainApp.showTaskDetails(selectedTask, stage);
+        }
     }
 
     public void handleShowProfile() {
@@ -106,6 +122,10 @@ public class ProblemDetailsController {
 
     public void handleShowPlane() {
         mainApp.showPlane(problem.getPlane(), stage);
+    }
+
+    public void handleShowRequests() {
+        mainApp.showRequestTable(stage, problem);
     }
 
     public void loadData() {
@@ -140,7 +160,7 @@ public class ProblemDetailsController {
     }
 
     private void loadDataFromDB() {
-        List<Task> list = taskDAO.findTasks(problem);
+        List<Task> list = taskDAO.findTasksByProblem(problem.getIdentifier());
         observableList = FXCollections.observableArrayList(list);
     }
 

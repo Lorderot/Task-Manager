@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="579.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="control.manager.ListOfSkillsTableViewController">
+   <children>
+      <TextField fx:id="filterField" layoutX="54.0" layoutY="4.0" prefHeight="25.0" prefWidth="159.0" />
+      <TableView fx:id="tableView" layoutY="35.0" prefHeight="364.0" prefWidth="213.0">
+        <columns>
+          <TableColumn fx:id="nameColumn" prefWidth="212.0" text="Назва" />
+        </columns>
+      </TableView>
+      <Label layoutY="4.0" text="Пошук:">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="371.0" layoutY="19.0" text="Опис:">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <TextArea fx:id="descriptionTextArea" layoutX="219.0" layoutY="39.0" prefHeight="205.0" prefWidth="355.0" />
+      <Button layoutX="525.0" layoutY="374.0" mnemonicParsing="false" onAction="#handleExit" text="Вийти" />
+   </children>
+</AnchorPane>

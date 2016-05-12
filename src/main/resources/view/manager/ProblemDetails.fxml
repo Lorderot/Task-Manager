@@ -17,9 +17,9 @@
       <Group AnchorPane.bottomAnchor="7.0">
          <children>
             <Button layoutX="14.0" layoutY="369.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="116.0" text="Нове завдання" />
-            <Button layoutX="149.0" layoutY="369.0" mnemonicParsing="false" text="Запити у відділ кадрів" />
-            <Button layoutX="305.0" layoutY="369.0" mnemonicParsing="false" onAction="#handleShowProfile" text="Профіль творця" />
-            <Button layoutX="14.0" layoutY="408.0" mnemonicParsing="false" text="Вибрати завдання" />
+            <Button layoutX="149.0" layoutY="369.0" mnemonicParsing="false" onAction="#handleShowRequests" text="Запити у відділ кадрів" />
+            <Button layoutX="305.0" layoutY="369.0" mnemonicParsing="false" onAction="#handleShowProfile" prefHeight="25.0" prefWidth="105.0" text="Профіль автора" />
+            <Button layoutX="14.0" layoutY="408.0" mnemonicParsing="false" onAction="#handleShowTaskDetails" prefHeight="25.0" prefWidth="116.0" text="Деталі завдання" />
             <Button layoutX="149.0" layoutY="408.0" mnemonicParsing="false" onAction="#handleShowPlane" prefHeight="25.0" prefWidth="137.0" text="Інформація про літак" />
             <Button layoutX="305.0" layoutY="408.0" mnemonicParsing="false" onAction="#updateData" prefHeight="25.0" prefWidth="105.0" text="Оновити дані" />
             <Button layoutX="434.0" layoutY="408.0" mnemonicParsing="false" onAction="#handleExit" prefHeight="25.0" prefWidth="91.0" text="Вийти" />

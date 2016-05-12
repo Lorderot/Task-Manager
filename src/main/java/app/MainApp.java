@@ -14,12 +14,11 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import model.Person;
-import model.Plane;
-import model.Problem;
+import model.*;
 import util.HibernateUtil;
 
 import java.io.IOException;
+import java.util.List;
 
 public class MainApp extends Application {
     private Stage mainStage;
@@ -141,7 +140,7 @@ public class MainApp extends Application {
     }
 
 
-    public void showPrimaryTask() {
+    public void showPrimaryTaskTable() {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("/view/manager/PrimaryTaskTableView.fxml"));
@@ -241,6 +240,95 @@ public class MainApp extends Application {
             planeStage.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void showRequestTable(Stage stage, Problem problem) {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/view/manager/RequestPersonTableView.fxml"));
+            AnchorPane root = loader.load();
+
+            Stage requestStage = new Stage();
+            requestStage.setTitle("Запити");
+            requestStage.setScene(new Scene(root));
+            requestStage.initOwner(stage);
+            requestStage.initModality(Modality.WINDOW_MODAL);
+            RequestTableViewController controller = loader.getController();
+            controller.setRequestStage(requestStage);
+            controller.setParentStage(stage);
+            controller.setProblem(problem);
+            controller.loadData();
+            controller.setMainApp(this);
+            requestStage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void showListOfSKills(List<Skill> list, Stage stage) {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/view/manager/ListOfSkillsTableView.fxml"));
+            AnchorPane root = loader.load();
+
+            Stage skillStage = new Stage();
+            skillStage.setTitle("Вміння");
+            skillStage.setScene(new Scene(root));
+            skillStage.initOwner(stage);
+            skillStage.initModality(Modality.WINDOW_MODAL);
+            ListOfSkillsTableViewController controller = loader.getController();
+            controller.setStage(skillStage);
+            controller.setSkills(list);
+            skillStage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void showTaskDetails(Task task, Stage stage) {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/view/manager/TaskDetails.fxml"));
+            AnchorPane root = loader.load();
+
+            Stage taskStage = new Stage();
+            taskStage.setResizable(false);
+            taskStage.setTitle("Деталі завдання");
+            taskStage.setScene(new Scene(root));
+            taskStage.initOwner(stage);
+            taskStage.initModality(Modality.WINDOW_MODAL);
+            TaskDetailsController controller = loader.getController();
+            controller.setStage(taskStage);
+            controller.setMainApp(this);
+            controller.setTask(task);
+            taskStage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Person showChoosePersonDialog(List<Person> persons, Stage stage) {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/view/manager/ChoosePersonDialog.fxml"));
+            AnchorPane root = loader.load();
+
+            Stage personStage = new Stage();
+            personStage.setResizable(false);
+            personStage.setTitle("Вибір робітника");
+            personStage.setScene(new Scene(root));
+            personStage.initOwner(stage);
+            personStage.initModality(Modality.WINDOW_MODAL);
+            ChoosePersonDialogController controller = loader.getController();
+            controller.setStage(personStage);
+            controller.setMainApp(this);
+            controller.loadData(persons);
+            personStage.showAndWait();
+            return controller.getChosenPerson();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 

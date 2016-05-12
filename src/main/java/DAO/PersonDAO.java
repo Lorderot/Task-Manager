@@ -18,7 +18,6 @@ public class PersonDAO {
         Query query = session.createSQLQuery("select * from persons where login = :login")
                 .addEntity(Person.class);
         query.setParameter("login", login);
-
         List queryList = query.list();
         if (queryList == null) {
             throw new NullPointerException("DB returns null list.");
@@ -28,6 +27,20 @@ public class PersonDAO {
         } else {
             return null;
         }
+    }
+
+    public List<Person> findWorkers() {
+        Transaction transaction = session.beginTransaction();
+        String sqlQuery = "select * from persons where access_type = 'worker';";
+        Query query = session.createSQLQuery(sqlQuery)
+                .addEntity(Person.class);
+        List<Person> persons = query.list();
+        if (persons == null) {
+            throw new NullPointerException("DB returns null list");
+        }
+        transaction.commit();
+        session.flush();
+        return persons;
     }
 
     public void updatePersonPassword(Person person) {

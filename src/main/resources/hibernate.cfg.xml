@@ -18,6 +18,9 @@
     <mapping class="model.Plane" />
     <mapping class ="model.Problem" />
     <mapping class="model.Task" />
+    <mapping class="model.Request" />
+    <mapping class="model.Skill" />
+    <mapping class="model.AssignedTask" />
 
     <!-- DB schema will be updated if needed -->
     <!-- <property name="hbm2ddl.auto">update</property> -->

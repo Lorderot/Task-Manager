@@ -3,7 +3,9 @@ package control.manager;
 import DAO.PersonDAO;
 import DAO.ProblemDAO;
 import app.MainApp;
-import javafx.beans.property.*;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -90,7 +92,7 @@ public class ManagerMainWindowController {
     }
 
     public void handlePrimaryTasks() {
-        mainApp.showPrimaryTask();
+        mainApp.showPrimaryTaskTable();
     }
 
     public void handlePlanes() {
@@ -129,14 +131,14 @@ public class ManagerMainWindowController {
     }
 
     public void loadData() {
-        loadDataFromDB();
+        loadProblemsByPersonFromDB();
         createFilter();
     }
 
     public void updateData() {
         session.close();
         session = HibernateUtil.getSession();
-        problemDAO.changeSession(session);
+        problemDAO.setSession(session);
         loadData();
     }
 
@@ -155,8 +157,9 @@ public class ManagerMainWindowController {
         userTypeLabel.setText(person.getUserType().toString());
     }
 
-    private void loadDataFromDB() {
-        List<Problem> list = problemDAO.findAssignedProblems(person);
+    private void loadProblemsByPersonFromDB() {
+        List<Problem> list = problemDAO
+                .findProblemsByAssignedPerson(person.getIdentifier());
         observableList = FXCollections.observableArrayList(list);
     }
 

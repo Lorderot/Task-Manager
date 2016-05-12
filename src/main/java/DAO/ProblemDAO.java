@@ -1,6 +1,5 @@
 package DAO;
 
-import model.Person;
 import model.Problem;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -15,10 +14,10 @@ public class ProblemDAO {
         this.session = session;
     }
 
-    public List<Problem> findAssignedProblems(Person person) {
+    public List<Problem> findProblemsByAssignedPerson(Integer personIdentifier) {
         Transaction transaction = session.beginTransaction();
         String sqlQuery = "select * from problems where assign_to_person_id = "
-                + person.getIdentifier() + ";";
+                + personIdentifier + ";";
         Query query = session.createSQLQuery(sqlQuery).addEntity(Problem.class);
         List<Problem> result = query.list();
         if (result == null) {
@@ -29,7 +28,7 @@ public class ProblemDAO {
         return result;
     }
 
-    public void changeSession(Session session) {
+    public void setSession(Session session) {
         this.session = session;
     }
 }
