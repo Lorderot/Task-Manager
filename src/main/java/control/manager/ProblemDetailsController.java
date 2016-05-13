@@ -78,6 +78,8 @@ public class ProblemDetailsController {
                 .addListener(((observable, oldValue, newValue) -> {
                     showDescription(newValue);
                 }));
+        problemDescriptionTextArea.setWrapText(true);
+        taskDescriptionTextArea.setWrapText(true);
     }
 
     public ProblemDetailsController() {

@@ -30,6 +30,7 @@ public class PrimaryTaskEditDialogController {
     public void initialize() {
         timeToCompleteField.setPromptText(TimeUtil.TIME_FORMAT);
         primaryTask = new PrimaryTask();
+        descriptionTextArea.setWrapText(true);
     }
 
     public boolean isOkClicked() {

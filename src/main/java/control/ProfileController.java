@@ -32,6 +32,7 @@ public class ProfileController {
         lastNameField.setEditable(false);
         birthdayField.setEditable(false);
         educationTextArea.setEditable(false);
+        educationTextArea.setWrapText(true);
         employmentDateField.setEditable(false);
         telephoneNumberField.setEditable(false);
         emailField.setEditable(false);

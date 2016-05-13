@@ -78,6 +78,8 @@ public class RequestTableViewController {
                         .getTask().getPrimaryTask().getName()));
         requestDescriptionTextArea.setEditable(false);
         respondDescriptionTextArea.setEditable(false);
+        respondDescriptionTextArea.setWrapText(true);
+        requestDescriptionTextArea.setWrapText(true);
     }
 
     public RequestTableViewController() {

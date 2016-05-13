@@ -93,6 +93,7 @@ public class PrimaryTaskTableViewController {
             }
         });
         descriptionTextArea.setEditable(false);
+        descriptionTextArea.setWrapText(true);
         showDescription(null);
         primaryTaskTable.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> showDescription(newValue));

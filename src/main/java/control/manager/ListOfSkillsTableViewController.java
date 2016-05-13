@@ -34,6 +34,7 @@ public class ListOfSkillsTableViewController {
         tableView.getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue)
                         -> showDescription(newValue));
+        descriptionTextArea.setWrapText(true);
     }
 
     public void handleExit() {

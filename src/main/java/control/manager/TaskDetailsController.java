@@ -91,6 +91,8 @@ public class TaskDetailsController {
                         deadlineField.setText(DateUtil.toString(date));
                     }
                 });
+        additionalDescriptionTextArea.setWrapText(true);
+        descriptionTextArea.setWrapText(true);
     }
 
     public void update() {
