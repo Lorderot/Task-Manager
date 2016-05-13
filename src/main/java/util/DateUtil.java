@@ -16,7 +16,9 @@ public class DateUtil {
     }
 
     public static Date fromString(String string) throws ParseException{
-
+        if (string == null || string.equals("")) {
+            return null;
+        }
         return parser.parse(string);
     }
 }

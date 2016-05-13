@@ -29,9 +29,9 @@ public class PersonDAO {
         }
     }
 
-    public List<Person> findWorkers() {
+    public List<Person> findAvailableWorkers() {
         Transaction transaction = session.beginTransaction();
-        String sqlQuery = "select * from persons where access_type = 'worker';";
+        String sqlQuery = "select * from current_workers;";
         Query query = session.createSQLQuery(sqlQuery)
                 .addEntity(Person.class);
         List<Person> persons = query.list();

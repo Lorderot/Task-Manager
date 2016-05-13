@@ -113,7 +113,7 @@ public class TaskDetailsController {
                     "Звільніть, будь ласка, робітника, щоб призначити іншого!");
             return;
         }
-        List<Person> persons = personDAO.findWorkers();
+        List<Person> persons = personDAO.findAvailableWorkers();
         Person person = mainApp.showChoosePersonDialog(persons, stage);
         if (person != null) {
             assignedTask = assignedTaskDAO
@@ -192,7 +192,8 @@ public class TaskDetailsController {
         Date deadline;
         try {
             deadline = DateUtil.fromString(deadlineField.getText());
-            if (!deadline.equals(task.getDeadline())) {
+            if ((deadline != null && !deadline.equals(task.getDeadline()))
+                    || (deadline == null && task.getDeadline() != null) ) {
                 updateTask = true;
                 task.setDeadline(deadline);
             }
