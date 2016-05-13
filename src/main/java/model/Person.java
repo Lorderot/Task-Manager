@@ -31,7 +31,7 @@ public class Person {
     @Temporal(value = TemporalType.DATE)
     private Date birthday;
     @Column(name = "phone_number")
-    private Integer phone_number;
+    private String phone_number;
     @Column(name = "email", length = 100)
     private String email;
     @Column(name = "skype", length = 100)
@@ -41,7 +41,7 @@ public class Person {
 
     public Person(String firstName, String lastName, Date dateIn, Date dateOut,
                   String education, String login, String password, String salt,
-                  Date birthday, Integer phone_number, String email,
+                  Date birthday, String phone_number, String email,
                   String skype, String userType, Integer identifier) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -142,11 +142,11 @@ public class Person {
         this.birthday = birthday;
     }
 
-    public Integer getPhone_number() {
+    public String getPhone_number() {
         return phone_number;
     }
 
-    public void setPhone_number(Integer phone_number) {
+    public void setPhone_number(String phone_number) {
         this.phone_number = phone_number;
     }
 

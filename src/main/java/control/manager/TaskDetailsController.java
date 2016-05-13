@@ -11,9 +11,7 @@ import javafx.stage.Stage;
 import model.AssignedTask;
 import model.Person;
 import model.Task;
-import org.hibernate.Session;
 import util.DateUtil;
-import util.HibernateUtil;
 import util.TimeUtil;
 
 import java.text.ParseException;
@@ -104,6 +102,7 @@ public class TaskDetailsController {
     }
 
     public void handleAssignWorker() {
+        updateAssignedTask();
         if (assignedTask != null) {
             MainApp.showAlert(Alert.AlertType.ERROR,"",
                     "Робітника уже призначено!",
@@ -113,31 +112,25 @@ public class TaskDetailsController {
         List<Person> persons = personDAO.findAvailableWorkers();
         Person person = mainApp.showChoosePersonDialog(persons, stage);
         if (person != null) {
-            assignedTask = assignedTaskDAO
-                    .findAssignedTaskByPersonAndTask(
-                            person.getIdentifier(), task.getIdentifier());
-            if (assignedTask == null) {
-                assignedTask = new AssignedTask();
-                assignedTask.setPerson(person);
-                assignedTask.setFinished(false);
-                assignedTask.setTask(task);
-                assignedTask.setAssignmentDate(new Date());
-                assignedTask.setProgress(0.0);
-                assignedTaskDAO.addAssignedTask(assignedTask);
-            } else {
-                assignedTask.setFinishDate(null);
-            }
-            setAssignedTask(assignedTask);
+            assignedTask = new AssignedTask();
+            assignedTask.setPerson(person);
+            assignedTask.setFinished(false);
+            assignedTask.setTask(task);
+            assignedTask.setAssignmentDate(new Date());
+            assignedTask.setProgress(0.0);
+            assignedTaskDAO.addAssignedTask(assignedTask);
+            updateAssignedTask();
         }
     }
 
     public void handleRemoveWorker() {
         Date currentDate = new Date();
+        updateAssignedTask();
         if (assignedTask != null) {
             assignedTask.setFinishDate(currentDate);
             assignedTask.setFinished(false);
             assignedTaskDAO.updateAssignedTask(assignedTask);
-            setAssignedTask(null);
+            updateAssignedTask();
         } else {
             MainApp.showAlert(Alert.AlertType.ERROR, "",
                     "На дану роботу не призначено робітника!",
@@ -224,8 +217,7 @@ public class TaskDetailsController {
             throw new IllegalArgumentException("set not null task");
         }
         this.task = task;
-        AssignedTask assignedTask = getAssignedTask();
-        setAssignedTask(assignedTask);
+        updateAssignedTask();
         taskNameField.setText(task.getPrimaryTask().getName());
         costField.setText(task.getPrimaryTask().getCost().toString());
         timeToCompleteField.setText(TimeUtil.toString(
@@ -235,16 +227,9 @@ public class TaskDetailsController {
         deadlineField.setText(DateUtil.toString(task.getDeadline()));
     }
 
-    private AssignedTask getAssignedTask() {
-        Session session = HibernateUtil.getSession();
-        AssignedTask assignedTask = assignedTaskDAO
+    private void updateAssignedTask() {
+        assignedTask = assignedTaskDAO
                 .findCurrentTaskAssignedToPerson(task.getIdentifier());
-        session.close();
-        return assignedTask;
-    }
-
-    private void setAssignedTask(AssignedTask assignedTask) {
-        this.assignedTask = assignedTask;
         if (assignedTask != null) {
             firstNameField.setText(assignedTask.getPerson().getFirstName());
             lastNameField.setText(assignedTask.getPerson().getLastName());

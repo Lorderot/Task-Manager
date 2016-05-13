@@ -29,30 +29,6 @@ public class AssignedTaskDAO {
         session.close();
     }
 
-    public AssignedTask findAssignedTaskByPersonAndTask(
-            Integer personIdentifier, Integer taskIdentifier) {
-        Session session = HibernateUtil.getSession();
-        Transaction transaction = session.beginTransaction();
-        String sqlQuery = "select * from assigned_tasks where task_id = "
-                + taskIdentifier + " AND person_id = " + personIdentifier
-                + " ;";
-        Query query = session.createSQLQuery(sqlQuery)
-                .addEntity(AssignedTask.class);
-        List<AssignedTask> list = query.list();
-        transaction.commit();
-        session.close();
-        if (list == null) {
-            throw new NullPointerException("DB returns null list");
-        }
-        if (list.size() > 1) {
-            System.err.print("DB return list with " + list.size() + " elements!");
-        }
-        if (list.size() == 0) {
-            return null;
-        }
-        return list.get(0);
-    }
-
     public AssignedTask findCurrentTaskAssignedToPerson(Integer taskIdentifier) {
         Session session = HibernateUtil.getSession();
         Transaction transaction = session.beginTransaction();

@@ -48,7 +48,7 @@ public class ProfileController {
         birthdayField.setText(person.getBirthday().toString());
         educationTextArea.setText(person.getEducation());
         employmentDateField.setText(person.getDateIn().toString());
-        telephoneNumberField.setText(person.getPhone_number().toString());
+        telephoneNumberField.setText(person.getPhone_number());
         emailField.setText(person.getEmail());
         skypeField.setText(person.getSkype());
     }
