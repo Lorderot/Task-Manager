@@ -14,8 +14,6 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import model.Problem;
 import model.Task;
-import org.hibernate.Session;
-import util.HibernateUtil;
 
 import java.util.Date;
 import java.util.List;
@@ -24,7 +22,6 @@ public class ProblemDetailsController {
     private Stage stage;
     private MainApp mainApp;
     private Problem problem;
-    private Session session;
     private TaskDAO taskDAO;
     private ObservableList<Task> observableList;
     @FXML
@@ -84,14 +81,10 @@ public class ProblemDetailsController {
     }
 
     public ProblemDetailsController() {
-        session = HibernateUtil.getSession();
-        taskDAO = new TaskDAO(session);
+        taskDAO = new TaskDAO();
     }
 
     public void updateData() {
-        session.close();
-        session = HibernateUtil.getSession();
-        taskDAO.setSession(session);
         loadData();
         createFilter();
         String refresh = filterField.getText();
@@ -100,7 +93,6 @@ public class ProblemDetailsController {
     }
 
     public void handleExit() {
-        session.close();
         stage.close();
     }
 

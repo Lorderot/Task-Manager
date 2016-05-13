@@ -116,10 +116,8 @@ public class Request {
     }
 
     private void loadSkills() {
-        Session session = HibernateUtil.getSession();
-        SkillDAO skillDAO = new SkillDAO(session);
+        SkillDAO skillDAO = new SkillDAO();
         skills = skillDAO.getSkillsByPrimaryTask(task
                 .getPrimaryTask().getIdentifier());
-        session.close();
     }
 }

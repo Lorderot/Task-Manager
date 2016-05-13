@@ -22,7 +22,6 @@ import java.util.List;
 
 public class TaskDetailsController {
     private final int labelTimeToHide = 5000;
-    private Session session;
     private MainApp mainApp;
     private Task task;
     private AssignedTask assignedTask;
@@ -60,10 +59,9 @@ public class TaskDetailsController {
     private Label confirmation;
 
     public TaskDetailsController() {
-        session = HibernateUtil.getSession();
-        assignedTaskDAO = new AssignedTaskDAO(session);
-        taskDAO = new TaskDAO(session);
-        personDAO = new PersonDAO(session);
+        assignedTaskDAO = new AssignedTaskDAO();
+        taskDAO = new TaskDAO();
+        personDAO = new PersonDAO();
     }
 
     @FXML
@@ -102,7 +100,6 @@ public class TaskDetailsController {
     }
 
     public void handleExit() {
-        session.close();
         stage.close();
     }
 
@@ -240,7 +237,6 @@ public class TaskDetailsController {
 
     private AssignedTask getAssignedTask() {
         Session session = HibernateUtil.getSession();
-        assignedTaskDAO.setSession(session);
         AssignedTask assignedTask = assignedTaskDAO
                 .findCurrentTaskAssignedToPerson(task.getIdentifier());
         session.close();

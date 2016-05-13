@@ -12,9 +12,10 @@ import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import model.*;
-import org.hibernate.Session;
-import util.HibernateUtil;
+import model.Person;
+import model.Problem;
+import model.Request;
+import model.Skill;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,7 +23,6 @@ import java.util.List;
 
 public class RequestTableViewController {
     private Stage requestStage;
-    private Session session;
     private MainApp mainApp;
     private Stage parentStage;
     private RequestDAO requestDAO;
@@ -81,12 +81,10 @@ public class RequestTableViewController {
     }
 
     public RequestTableViewController() {
-        session = HibernateUtil.getSession();
-        requestDAO = new RequestDAO(session);
+        requestDAO = new RequestDAO();
     }
 
     public void handleExit() {
-        session.close();
         requestStage.close();
     }
 

@@ -5,20 +5,20 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.exception.ConstraintViolationException;
+import util.HibernateUtil;
 
 import java.util.List;
 
 public class PrimaryTaskDAO {
-    private Session session;
-
-    public PrimaryTaskDAO(Session session) {
-        this.session = session;
-    }
 
     public List<PrimaryTask> findAll() {
+        Session session = HibernateUtil.getSession();
+        Transaction transaction = session.beginTransaction();
         Query query = session.createSQLQuery("select * from primary_tasks;")
                 .addEntity(PrimaryTask.class);
         List list = query.list();
+        transaction.commit();
+        session.close();
         if (list == null) {
             throw new NullPointerException("DB returns null list.");
         }
@@ -31,6 +31,7 @@ public class PrimaryTaskDAO {
 
     public boolean add(PrimaryTask primaryTask)
             throws ConstraintViolationException {
+        Session session = HibernateUtil.getSession();
         Transaction transaction = session.beginTransaction();
         String sqlQuery = "insert into primary_tasks("
                 + "cost, description, short_name, time_to_complete)"
@@ -47,15 +48,11 @@ public class PrimaryTaskDAO {
             throw e;
         } finally {
             transaction.commit();
-            session.flush();
+            session.close();
         }
         if (result > 0) {
             return true;
         }
         return false;
-    }
-
-    public void setSession(Session session) {
-        this.session = session;
     }
 }

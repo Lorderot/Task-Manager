@@ -13,13 +13,10 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import model.Plane;
-import org.hibernate.Session;
-import util.HibernateUtil;
 
 import java.util.List;
 
 public class PlaneTableViewController {
-    private Session session;
     private PlaneDAO planeDAO;
     private Stage planeStage;
     private ObservableList<Plane> observableList;
@@ -43,8 +40,7 @@ public class PlaneTableViewController {
     private TextField filterField;
 
     public PlaneTableViewController() {
-        session = HibernateUtil.getSession();
-        planeDAO = new PlaneDAO(session);
+        planeDAO = new PlaneDAO();
         loadDataFromDB();
     }
 
@@ -68,7 +64,6 @@ public class PlaneTableViewController {
     }
 
     public void handleOk() {
-        session.close();
         planeStage.close();
     }
 
@@ -89,9 +84,6 @@ public class PlaneTableViewController {
 
     public void updateData() {
         filterField.setText("");
-        session.close();
-        session = HibernateUtil.getSession();
-        planeDAO.setSession(session);
         loadDataFromDB();
         createFilter();
         String refresh = filterField.getText();

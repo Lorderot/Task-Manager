@@ -13,9 +13,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import model.PrimaryTask;
-import org.hibernate.Session;
 import org.hibernate.exception.ConstraintViolationException;
-import util.HibernateUtil;
 import view.ViewParameters;
 
 import java.sql.Time;
@@ -23,7 +21,6 @@ import java.util.List;
 
 public class PrimaryTaskTableViewController {
     private Stage primaryTaskStage;
-    private Session session;
     private MainApp mainapp;
     private ObservableList<PrimaryTask> observableList;
     private PrimaryTaskDAO primaryTaskDAO;
@@ -45,8 +42,7 @@ public class PrimaryTaskTableViewController {
     private TextArea descriptionTextArea;
 
     public PrimaryTaskTableViewController() {
-        session = HibernateUtil.getSession();
-        this.primaryTaskDAO = new PrimaryTaskDAO(session);
+        this.primaryTaskDAO = new PrimaryTaskDAO();
         loadDataFromDB();
     }
 
@@ -117,13 +113,11 @@ public class PrimaryTaskTableViewController {
     }
 
     public void handleExit() {
-        session.close();
         primaryTaskStage.close();
     }
 
     public void setPrimaryTaskStage(Stage primaryTaskStage) {
         this.primaryTaskStage = primaryTaskStage;
-        primaryTaskStage.setOnCloseRequest((windowEvent) -> session.close());
     }
 
     public Stage getPrimaryTaskStage() {
@@ -141,9 +135,6 @@ public class PrimaryTaskTableViewController {
     }
 
     public void updateData() {
-        session.close();
-        session = HibernateUtil.getSession();
-        primaryTaskDAO.setSession(session);
         loadDataFromDB();
         String refresh = filterField.getText();
         createFilter();

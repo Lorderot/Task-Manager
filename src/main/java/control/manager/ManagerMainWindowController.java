@@ -15,14 +15,12 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import model.Person;
 import model.Problem;
-import org.hibernate.Session;
 import util.HibernateUtil;
 
 import java.util.Date;
 import java.util.List;
 
 public class ManagerMainWindowController {
-    private Session session;
     private PersonDAO personDAO;
     private ProblemDAO problemDAO;
     private Person person;
@@ -58,9 +56,8 @@ public class ManagerMainWindowController {
     private Label userTypeLabel;
 
     public ManagerMainWindowController() {
-        session = HibernateUtil.getSession();
-        personDAO = new PersonDAO(session);
-        problemDAO = new ProblemDAO(session);
+        personDAO = new PersonDAO();
+        problemDAO = new ProblemDAO();
     }
 
     @FXML
@@ -125,7 +122,6 @@ public class ManagerMainWindowController {
     }
 
     public void handleExit() {
-        session.close();
         HibernateUtil.shutDown();
         mainStage.close();
     }
@@ -136,9 +132,6 @@ public class ManagerMainWindowController {
     }
 
     public void updateData() {
-        session.close();
-        session = HibernateUtil.getSession();
-        problemDAO.setSession(session);
         loadData();
     }
 

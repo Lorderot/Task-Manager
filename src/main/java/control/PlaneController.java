@@ -6,13 +6,10 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import model.Plane;
-import org.hibernate.Session;
-import util.HibernateUtil;
 
 public class PlaneController {
     private Plane plane;
     private Stage planeStage;
-    private Session session;
     private PlaneDAO planeDAO;
     @FXML
     private TextField nameField;
@@ -38,8 +35,7 @@ public class PlaneController {
     }
 
     public PlaneController() {
-        session = HibernateUtil.getSession();
-        planeDAO = new PlaneDAO(session);
+        planeDAO = new PlaneDAO();
     }
 
     public void handleExit() {

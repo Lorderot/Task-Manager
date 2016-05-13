@@ -9,13 +9,9 @@ import util.HibernateUtil;
 import java.util.List;
 
 public class AssignedTaskDAO {
-    private Session session;
-
-    public AssignedTaskDAO(Session session) {
-        this.session = session;
-    }
 
     public void addAssignedTask(AssignedTask assignedTask) {
+        Session session = HibernateUtil.getSession();
         Transaction transaction = session.beginTransaction();
         String sqlQuery = "insert into assigned_tasks(person_id, task_id, " +
                 "date_of_assignment, progress, finish) " +
@@ -30,11 +26,12 @@ public class AssignedTaskDAO {
         query.setParameter("finish", assignedTask.getFinished());
         query.executeUpdate();
         transaction.commit();
-        session.flush();
+        session.close();
     }
 
     public AssignedTask findAssignedTaskByPersonAndTask(
             Integer personIdentifier, Integer taskIdentifier) {
+        Session session = HibernateUtil.getSession();
         Transaction transaction = session.beginTransaction();
         String sqlQuery = "select * from assigned_tasks where task_id = "
                 + taskIdentifier + " AND person_id = " + personIdentifier
@@ -42,14 +39,14 @@ public class AssignedTaskDAO {
         Query query = session.createSQLQuery(sqlQuery)
                 .addEntity(AssignedTask.class);
         List<AssignedTask> list = query.list();
+        transaction.commit();
+        session.close();
         if (list == null) {
             throw new NullPointerException("DB returns null list");
         }
         if (list.size() > 1) {
             System.err.print("DB return list with " + list.size() + " elements!");
         }
-        transaction.commit();
-        session.flush();
         if (list.size() == 0) {
             return null;
         }
@@ -57,6 +54,7 @@ public class AssignedTaskDAO {
     }
 
     public AssignedTask findCurrentTaskAssignedToPerson(Integer taskIdentifier) {
+        Session session = HibernateUtil.getSession();
         Transaction transaction = session.beginTransaction();
         String sqlQuery = "select *  from assigned_tasks where " +
                 "(date_finish IS NULL OR finish = true) AND " +
@@ -64,6 +62,8 @@ public class AssignedTaskDAO {
         Query query = session.createSQLQuery(sqlQuery)
                 .addEntity(AssignedTask.class);
         List<AssignedTask> list = query.list();
+        session.close();
+        transaction.commit();
         if (list == null) {
             throw new NullPointerException("DB returns null list");
         }
@@ -71,8 +71,6 @@ public class AssignedTaskDAO {
             System.err.println("DB returns "
                     + list.size() + " assigned tasks");
         }
-        transaction.commit();
-        session.flush();
         if (list.size() == 0) {
             return null;
         }
@@ -85,9 +83,5 @@ public class AssignedTaskDAO {
         session.update(assignedTask);
         transaction.commit();
         session.close();
-    }
-
-    public void setSession(Session session) {
-        this.session = session;
     }
 }

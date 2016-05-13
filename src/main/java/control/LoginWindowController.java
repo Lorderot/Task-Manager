@@ -10,12 +10,10 @@ import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import model.Person;
 import model.UserType;
-import org.hibernate.Session;
 import org.hibernate.exception.JDBCConnectionException;
 import util.HibernateUtil;
 
 public class LoginWindowController {
-    private Session session;
     private PersonDAO personDAO;
     private Stage loginStage;
     private Person person;
@@ -56,7 +54,6 @@ public class LoginWindowController {
         }
         Person person = authentication();
         if (person != null) {
-            session.close();
             HibernateUtil.shutDown();
             HibernateUtil.buildSessionFactory(person.getUserType());
             this.person = person;
@@ -65,7 +62,6 @@ public class LoginWindowController {
     }
 
     public void handleExit() {
-        session.close();
         HibernateUtil.shutDown();
         loginStage.close();
     }
@@ -96,7 +92,6 @@ public class LoginWindowController {
                     "Підключіться, будь ласка, до інтернету");
             return;
         }
-        session = HibernateUtil.getSession();
-        personDAO = new PersonDAO(session);
+        personDAO = new PersonDAO();
     }
 }
