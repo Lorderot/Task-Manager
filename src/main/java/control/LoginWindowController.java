@@ -9,7 +9,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import model.Person;
-import model.UserType;
 import org.hibernate.exception.JDBCConnectionException;
 import util.HibernateUtil;
 
@@ -23,7 +22,7 @@ public class LoginWindowController {
     private PasswordField passwordField;
 
     public LoginWindowController() {
-        createConnection();
+        personDAO = new PersonDAO();
     }
 
     @FXML
@@ -49,49 +48,34 @@ public class LoginWindowController {
     }
 
     public void handleLogin() {
-        if (HibernateUtil.isFactoryClosed()) {
-            createConnection();
+        Person person;
+        try {
+            HibernateUtil.buildSessionFactory(userNameField.getText().toLowerCase(),
+                    passwordField.getText());
+            person = personDAO.findPersonByLogin(userNameField.getText());
+        } catch (JDBCConnectionException e) {
+            e.printStackTrace();
+            MainApp.showAlert(Alert.AlertType.ERROR,
+                    "Авторизація",
+                    "Будь ласка, введіть вірні ім'я користувача та пароль",
+                    "Невірні ім'я користувача або пароль");
+            return;
         }
-        Person person = authentication();
         if (person != null) {
-            HibernateUtil.shutDown();
-            HibernateUtil.buildSessionFactory(person.getUserType());
             this.person = person;
+            person.setPassword(passwordField.getText());
             loginStage.close();
+        } else {
+            MainApp.showAlert(Alert.AlertType.ERROR,
+                    "Авторизація",
+                    "Такого користувача не знайдено в базі даних!",
+                    "");
+            HibernateUtil.shutDown();
         }
     }
 
     public void handleExit() {
         HibernateUtil.shutDown();
         loginStage.close();
-    }
-
-    private Person authentication() {
-        Person person = personDAO.findPersonByLogin(userNameField.getText());
-        if (person != null) {
-            if (person.getPassword().equals(passwordField.getText())) {
-                return person;
-            }
-        }
-        MainApp.showAlert(Alert.AlertType.ERROR,
-                "Авторизація",
-                "Будь ласка, введіть вірні ім'я користувача та пароль",
-                "Невірні ім'я користувача або пароль");
-        return null;
-    }
-
-    private void createConnection() {
-        try {
-            if (HibernateUtil.isFactoryClosed()) {
-                HibernateUtil.buildSessionFactory(UserType.ADMIN);
-            }
-        } catch (JDBCConnectionException e) {
-            e.printStackTrace();
-            MainApp.showAlert(Alert.AlertType.ERROR,
-                    "Доступ до інтернет ресурсів", "Проблеми зі з'єднанням",
-                    "Підключіться, будь ласка, до інтернету");
-            return;
-        }
-        personDAO = new PersonDAO();
     }
 }

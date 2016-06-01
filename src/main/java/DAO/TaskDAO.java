@@ -24,6 +24,25 @@ public class TaskDAO {
         return result;
     }
 
+    public void addTask(Task task) {
+        Session session = HibernateUtil.getSession();
+        Transaction transaction = session.beginTransaction();
+        String sqlQuery = "insert into tasks(problem_id, primary_task_id, "
+                + "date_create, date_deadline, amount_of_primary_task,"
+                + "priority) values(:problem, :primaryTask, "
+                + ":creation, :deadline, :amount, :priority);";
+        Query query = session.createSQLQuery(sqlQuery).addEntity(Task.class);
+        query.setParameter("problem", task.getProblem().getIdentifier());
+        query.setParameter("primaryTask", task.getPrimaryTask().getIdentifier());
+        query.setParameter("creation", task.getCreateDate());
+        query.setParameter("deadline", task.getDeadline());
+        query.setParameter("amount", task.getAmount());
+        query.setParameter("priority", task.getPriority());
+        query.executeUpdate();
+        transaction.commit();
+        session.close();
+    }
+
     public Task findTaskByIdentifier(Integer taskIdentifier) {
         Session session = HibernateUtil.getSession();
         Transaction transaction = session.beginTransaction();

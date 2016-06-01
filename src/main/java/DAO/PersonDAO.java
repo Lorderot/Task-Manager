@@ -47,10 +47,9 @@ public class PersonDAO {
     public void updatePersonPassword(Person person) {
         Session session = HibernateUtil.getSession();
         Transaction transaction = session.beginTransaction();
-        String sqlQuery = "update persons set password = :password where person_id = :id";
+        String sqlQuery = "alter user " + person.getLogin().toLowerCase()
+                + " with password '" + person.getPassword() + "';" ;
         Query query = session.createSQLQuery(sqlQuery);
-        query.setParameter("password", person.getPassword());
-        query.setParameter("id", person.getIdentifier());
         query.executeUpdate();
         transaction.commit();
         session.close();

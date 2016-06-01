@@ -25,8 +25,23 @@ public class PrimaryTaskDAO {
         return list;
     }
 
-    public PrimaryTask findPrimaryTaskByName(PrimaryTask primaryTask) {
-        throw new UnsupportedOperationException();
+    public PrimaryTask findPrimaryTaskByName(String primaryTask) {
+        Session session = HibernateUtil.getSession();
+        Transaction transaction = session.beginTransaction();
+        String sqlQuery = "select * from primary_tasks where short_name = '"
+                + primaryTask + "';";
+        Query query = session.createSQLQuery(sqlQuery)
+                .addEntity(PrimaryTask.class);
+        List<PrimaryTask> list = query.list();
+        transaction.commit();
+        session.close();
+        if (list == null) {
+            throw new NullPointerException("DB return null list" );
+        }
+        if (list.size() > 1) {
+            System.err.println("DB return list with size " + list.size() + "!!!");
+        }
+        return list.get(0);
     }
 
     public boolean add(PrimaryTask primaryTask)

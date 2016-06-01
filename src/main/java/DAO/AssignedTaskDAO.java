@@ -14,22 +14,23 @@ public class AssignedTaskDAO {
         Session session = HibernateUtil.getSession();
         Transaction transaction = session.beginTransaction();
         String sqlQuery = "insert into assigned_tasks(person_id, task_id, " +
-                "date_of_assignment, progress, finish) " +
+                "date_of_assignment, finish, amount, description) " +
                 "values(:person_id, :task_id, :date_of_assignment, " +
-                ":progress, :finish);";
+                ":finish, :amount, :description);";
         Query query = session.createSQLQuery(sqlQuery)
                 .addEntity(AssignedTask.class);
         query.setParameter("person_id", assignedTask.getPerson().getIdentifier());
         query.setParameter("task_id", assignedTask.getTask().getIdentifier());
         query.setParameter("date_of_assignment", assignedTask.getAssignmentDate());
-        query.setParameter("progress", assignedTask.getProgress());
         query.setParameter("finish", assignedTask.getFinished());
+        query.setParameter("amount", assignedTask.getAmount());
+        query.setParameter("description", assignedTask.getDescription());
         query.executeUpdate();
         transaction.commit();
         session.close();
     }
 
-    public AssignedTask findCurrentTaskAssignedToPerson(Integer taskIdentifier) {
+    public List<AssignedTask> findAssignedTasks(Integer taskIdentifier) {
         Session session = HibernateUtil.getSession();
         Transaction transaction = session.beginTransaction();
         String sqlQuery = "select *  from assigned_tasks where " +
@@ -38,19 +39,12 @@ public class AssignedTaskDAO {
         Query query = session.createSQLQuery(sqlQuery)
                 .addEntity(AssignedTask.class);
         List<AssignedTask> list = query.list();
-        session.close();
         transaction.commit();
+        session.close();
         if (list == null) {
             throw new NullPointerException("DB returns null list");
         }
-        if (list.size() > 1) {
-            System.err.println("DB returns "
-                    + list.size() + " assigned tasks");
-        }
-        if (list.size() == 0) {
-            return null;
-        }
-        return list.get(0);
+        return list;
     }
 
     public void updateAssignedTask(AssignedTask assignedTask) {

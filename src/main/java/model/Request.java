@@ -30,6 +30,8 @@ public class Request {
     private String description;
     @Column(name = "respond")
     private String respond;
+    @Column(name = "canceled")
+    private Boolean canceled;
     @Transient
     private List<Skill> skills;
 
@@ -38,7 +40,7 @@ public class Request {
 
     public Request(Integer identifier, Person person, Task task,
                    Date dateOfRequest, Date dateOfRespond, String description,
-                   String respond) {
+                   String respond, Boolean canceled) {
         this.identifier = identifier;
         this.person = person;
         this.task = task;
@@ -46,6 +48,7 @@ public class Request {
         this.dateOfRespond = dateOfRespond;
         this.description = description;
         this.respond = respond;
+        this.canceled = canceled;
     }
 
     public Integer getIdentifier() {
@@ -101,6 +104,14 @@ public class Request {
             loadSkills();
         }
         return skills;
+    }
+
+    public Boolean getCanceled() {
+        return canceled;
+    }
+
+    public void setCanceled(Boolean canceled) {
+        this.canceled = canceled;
     }
 
     public Person getPerson() {

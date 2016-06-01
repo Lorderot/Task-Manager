@@ -2,101 +2,100 @@ package control.manager;
 
 import DAO.AssignedTaskDAO;
 import DAO.PersonDAO;
-import DAO.TaskDAO;
+import DAO.RequestDAO;
 import app.MainApp;
-import javafx.application.Platform;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import model.AssignedTask;
 import model.Person;
+import model.Request;
 import model.Task;
 import util.DateUtil;
 import util.TimeUtil;
 
-import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
 public class TaskDetailsController {
-    private final int labelTimeToHide = 5000;
     private MainApp mainApp;
+    private Request request;
+    private Integer tasksToAssign;
+    private ObservableList<AssignedTask> taskList;
     private Task task;
-    private AssignedTask assignedTask;
     private Stage stage;
     private AssignedTaskDAO assignedTaskDAO;
-    private TaskDAO taskDAO;
     private PersonDAO personDAO;
     @FXML
-    private TextField firstNameField;
+    private TableView<AssignedTask> taskTableView;
     @FXML
-    private TextField lastNameField;
+    private TableColumn<AssignedTask, String> firstNameColumn;
     @FXML
-    private TextField assignmentDateField;
+    private TableColumn<AssignedTask, String> lastNameColumn;
     @FXML
-    private TextField updateField;
+    private TableColumn<AssignedTask, Integer> amountOfTasksColumn;
     @FXML
-    private TextField finishDateField;
+    private TableColumn<AssignedTask, String> isFinishedColumn;
+    @FXML
+    private TextField creationDateField;
     @FXML
     private TextField deadlineField;
     @FXML
-    private TextField taskNameField;
+    private TextArea commentsTextArea;
+    @FXML
+    private TextField nameOfJobTextField;
     @FXML
     private TextField costField;
     @FXML
     private TextField timeToCompleteField;
     @FXML
-    private TextArea additionalDescriptionTextArea;
-    @FXML
     private TextArea descriptionTextArea;
     @FXML
-    private ProgressBar progressBar;
-    @FXML
-    private CheckBox isFinishedCheckBox;
-    @FXML
-    private Label confirmation;
+    private TextField tasksToAssignField;
 
     public TaskDetailsController() {
         assignedTaskDAO = new AssignedTaskDAO();
-        taskDAO = new TaskDAO();
         personDAO = new PersonDAO();
     }
 
     @FXML
     public void initialize() {
-        firstNameField.setEditable(false);
-        lastNameField.setEditable(false);
-        assignmentDateField.setEditable(false);
-        updateField.setEditable(false);
-        finishDateField.setEditable(false);
-        deadlineField.setEditable(true);
-        deadlineField.setPromptText(DateUtil.DATE_FORMAT);
-        taskNameField.setEditable(false);
+        firstNameColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue()
+                        .getPerson().getFirstName()));
+        lastNameColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue()
+                        .getPerson().getLastName()));
+        amountOfTasksColumn.setCellValueFactory(cellData ->
+                new SimpleObjectProperty<>(cellData.getValue()
+                        .getAmount()));
+        isFinishedColumn.setCellValueFactory(cellData -> {
+            String isFinished;
+            if (cellData.getValue().getFinished()) {
+                isFinished = "Так";
+            } else {
+                isFinished = "Ні";
+            }
+            return new SimpleStringProperty(isFinished);
+        });
+        creationDateField.setEditable(false);
+        deadlineField.setEditable(false);
+        nameOfJobTextField.setEditable(false);
         costField.setEditable(false);
         timeToCompleteField.setEditable(false);
         descriptionTextArea.setEditable(false);
-        additionalDescriptionTextArea.setEditable(true);
-        deadlineField.focusedProperty().addListener(
-                (observable, oldValue, newValue) -> {
-                    if (!newValue) {
-                    Date date = null;
-                        try {
-                            date = DateUtil.fromString(deadlineField.getText());
-                        } catch (ParseException e) {
-                            deadlineField.setPromptText(DateUtil.DATE_FORMAT);
-                            MainApp.showAlert(Alert.AlertType.ERROR,
-                                    "","Невірний формат дати",
-                                    "Будь ласка, введіть дату корректно");
-                        }
-                        deadlineField.setText(DateUtil.toString(date));
-                    }
-                });
-        additionalDescriptionTextArea.setWrapText(true);
         descriptionTextArea.setWrapText(true);
-    }
-
-    public void update() {
-        setTask(taskDAO.findTaskByIdentifier(task.getIdentifier()));
+        commentsTextArea.setEditable(false);
+        tasksToAssignField.setEditable(false);
+        showDescription(null);
+        taskTableView.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldValue, newValue) -> {
+                    showDescription(newValue);
+                });
     }
 
     public void handleExit() {
@@ -104,152 +103,126 @@ public class TaskDetailsController {
     }
 
     public void handleAssignWorker() {
-        updateAssignedTask();
-        if (assignedTask != null) {
-            MainApp.showAlert(Alert.AlertType.ERROR,"",
-                    "Робітника уже призначено!",
-                    "Звільніть, будь ласка, робітника, щоб призначити іншого!");
+        if (tasksToAssign == 0) {
+            MainApp.showAlert(Alert.AlertType.ERROR,
+                    "Немає необхідності робити запит! ",
+                    "Дане завдання уже розподілено між робітниками!",
+                    "");
             return;
         }
         List<Person> persons = personDAO.findAvailableWorkers();
-        Person person = mainApp.showChoosePersonDialog(persons, stage);
-        if (person != null) {
-            assignedTask = new AssignedTask();
-            assignedTask.setPerson(person);
-            assignedTask.setFinished(false);
-            assignedTask.setTask(task);
-            assignedTask.setAssignmentDate(new Date());
-            assignedTask.setProgress(0.0);
-            assignedTaskDAO.addAssignedTask(assignedTask);
-            updateAssignedTask();
+        AssignedTask task = mainApp.showAssignTaskDialog(persons,
+                tasksToAssign, stage);
+        if (task != null) {
+            tasksToAssign -= task.getAmount();
+            updateTaskToAssignField();
+            task.setTask(this.task);
+            assignedTaskDAO.addAssignedTask(task);
+            taskList.add(task);
+            loadData();
         }
     }
 
     public void handleRemoveWorker() {
-        Date currentDate = new Date();
-        updateAssignedTask();
-        if (assignedTask != null) {
-            assignedTask.setFinishDate(currentDate);
-            assignedTask.setFinished(false);
-            assignedTaskDAO.updateAssignedTask(assignedTask);
-            updateAssignedTask();
-        } else {
+        AssignedTask task =
+                taskTableView.getSelectionModel().getSelectedItem();
+        if (task == null) {
             MainApp.showAlert(Alert.AlertType.ERROR, "",
-                    "На дану роботу не призначено робітника!",
-                    "");
+                    "Не вибрано жодного робітника",
+                    "Виберіть, будь ласка, робітника!");
+        } else {
+            Date currentDate = new Date();
+            if (!task.getFinished()) {
+                task.setFinishDate(currentDate);
+                taskList.remove(task);
+                assignedTaskDAO.updateAssignedTask(task);
+                tasksToAssign += task.getAmount();
+            } else {
+                MainApp.showAlert(Alert.AlertType.ERROR,
+                        "",
+                        "",
+                        "Неможливо звільнити робітника із завдання," +
+                                "яке вже зараховано!");
+            }
+            updateTaskToAssignField();
         }
+    }
 
+    public void handleSetFinished() {
+        AssignedTask task =
+                taskTableView.getSelectionModel().getSelectedItem();
+        if (task == null) {
+            MainApp.showAlert(Alert.AlertType.ERROR, "",
+                    "Не вибрано жодного робітника",
+                    "Виберіть, будь ласка, робітника");
+        } else {
+            if (!task.getFinished()) {
+                task.setFinished(true);
+                task.setFinishDate(new Date());
+                assignedTaskDAO.updateAssignedTask(task);
+                loadData();
+            }
+        }
     }
 
     public void handleShowProfile() {
-        if (assignedTask == null) {
-            MainApp.showAlert(Alert.AlertType.ERROR,
-                    "Неможливо показати профіль!",
-                    "Завдання ніким не виконується!",
-                    "");
-        } else {
-            mainApp.showProfile(assignedTask.getPerson());
-        }
-    }
-
-    public void handleConfirmChanges() {
-        boolean updateAssignedTask = false;
-        boolean updateTask = false;
-        if (isFinishedCheckBox.isSelected()) {
-            if (!canTaskBeFinished()) {
-                return;
-            } else {
-                if (!assignedTask.getFinished()) {
-                    assignedTask.setFinished(true);
-                    Date currentDate = new Date();
-                    assignedTask.setFinishDate(currentDate);
-                    finishDateField.setText(DateUtil.toString(currentDate));
-                    updateAssignedTask = true;
-                }
-            }
-        } else {
-            if (assignedTask != null && assignedTask.getFinished()) {
-                assignedTask.setFinished(false);
-                assignedTask.setFinishDate(null);
-                finishDateField.setText("");
-                updateAssignedTask = true;
-            }
-        }
-
-        if (!additionalDescriptionTextArea.getText()
-                .equals(task.getDescription())) {
-            task.setDescription(additionalDescriptionTextArea.getText());
-            updateTask = true;
-        }
-        Date deadline;
-        try {
-            deadline = DateUtil.fromString(deadlineField.getText());
-            if ((deadline != null && !deadline.equals(task.getDeadline()))
-                    || (deadline == null && task.getDeadline() != null) ) {
-                updateTask = true;
-                task.setDeadline(deadline);
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        if (updateTask) {
-            taskDAO.updateTask(task);
-        }
-        if (updateAssignedTask) {
-            assignedTaskDAO.updateAssignedTask(assignedTask);
-        }
-        new Thread(() -> {
-            try {
-                Thread.sleep(labelTimeToHide);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            Platform.runLater(() ->
-                    confirmation.setText(""));
-        }).start();
-        if (!updateAssignedTask && !updateTask) {
-            confirmation.setText("Змін не виявлено!");
+        AssignedTask task =
+                taskTableView.getSelectionModel().getSelectedItem();
+        if (task == null) {
+            MainApp.showAlert(Alert.AlertType.ERROR, "",
+                    "Не вибрано жодного робітника",
+                    "Виберіть, будь ласка, робітників");
             return;
         }
-        confirmation.setText("Зміни вступили в силу!");
+        mainApp.showProfile(task.getPerson());
     }
 
-    public void setTask(Task task) {
-        if (task == null) {
-            throw new IllegalArgumentException("set not null task");
+    public void handleMakeRequest() {
+        updateRequest();
+        if (request != null) {
+            MainApp.showAlert(Alert.AlertType.ERROR,"",
+                    "Запит вже зроблено!",
+                    "Відмініть, будь ласка, запит, щоб зробити новий");
+            return;
         }
-        this.task = task;
-        updateAssignedTask();
-        taskNameField.setText(task.getPrimaryTask().getName());
-        costField.setText(task.getPrimaryTask().getCost().toString());
-        timeToCompleteField.setText(TimeUtil.toString(
-                task.getPrimaryTask().getTimeToComplete()));
-        descriptionTextArea.setText(task.getPrimaryTask().getDescription());
-        additionalDescriptionTextArea.setText(task.getDescription());
-        deadlineField.setText(DateUtil.toString(task.getDeadline()));
+        if (tasksToAssign == 0) {
+            MainApp.showAlert(Alert.AlertType.ERROR,
+                    "Немає необхідності робити запит! ",
+                    "Дане завдання уже розподілено між робітниками!",
+                    "");
+            return;
+        }
+        mainApp.createRequestDialog(stage, task);
     }
 
-    private void updateAssignedTask() {
-        assignedTask = assignedTaskDAO
-                .findCurrentTaskAssignedToPerson(task.getIdentifier());
-        if (assignedTask != null) {
-            firstNameField.setText(assignedTask.getPerson().getFirstName());
-            lastNameField.setText(assignedTask.getPerson().getLastName());
-            assignmentDateField.setText(DateUtil.toString(assignedTask
-                    .getAssignmentDate()));
-            updateField.setText(DateUtil.toString(assignedTask.getUpdate()));
-            finishDateField.setText(DateUtil.toString(assignedTask.getFinishDate()));
-            progressBar.setProgress(assignedTask.getProgress());
-            isFinishedCheckBox.setSelected(assignedTask.getFinished());
-        } else {
-            firstNameField.setText("");
-            lastNameField.setText("");
-            assignmentDateField.setText("");
-            updateField.setText("");
-            finishDateField.setText("");
-            progressBar.setProgress(0);
-            isFinishedCheckBox.setSelected(false);
+    public void handleCancelRequest() {
+        updateRequest();
+        if (request == null) {
+            MainApp.showAlert(Alert.AlertType.ERROR, "",
+                    "Запиту не зроблено!", "");
+            return;
         }
+        request.setCanceled(true);
+        RequestDAO requestDAO = new RequestDAO();
+        requestDAO.update(request);
+        request = null;
+    }
+
+    public void updateRequest() {
+        RequestDAO requestDAO = new RequestDAO();
+        request = requestDAO.findCurrentRequestByTaskID(task.getIdentifier());
+    }
+
+    public void loadData() {
+        List<AssignedTask> list = assignedTaskDAO.findAssignedTasks(
+                task.getIdentifier());
+        tasksToAssign = task.getAmount();
+        for (AssignedTask task : list) {
+            tasksToAssign -= task.getAmount();
+        }
+        updateTaskToAssignField();
+        taskList = FXCollections.observableList(list);
+        taskTableView.setItems(taskList);
     }
 
     public void setStage(Stage stage) {
@@ -260,21 +233,30 @@ public class TaskDetailsController {
         this.mainApp = mainApp;
     }
 
-    private boolean canTaskBeFinished() {
-        if (assignedTask == null) {
-            MainApp.showAlert(Alert.AlertType.ERROR,
-                    "Помилка!","Завдання ніхто не виконував!",
-                    "Завдання, не призначене" +
-                    " робітнику, не може бути зарахованим!");
-            return false;
+    public void setTask(Task task) {
+        if (task == null) {
+            throw new IllegalArgumentException("set not null task");
         }
-        if (assignedTask.getProgress() != 1) {
-            MainApp.showAlert(Alert.AlertType.ERROR,
-                    "Помилка!","Завдання не може бути зарахованим",
-                    "Робітник ще не закінчив" +
-                            " виконання завдання!");
-            return false;
+        this.task = task;
+        updateRequest();
+        creationDateField.setText(DateUtil.toString(task.getCreateDate()));
+        deadlineField.setText(DateUtil.toString(task.getDeadline()));
+        nameOfJobTextField.setText(task.getPrimaryTask().getName());
+        costField.setText(task.getPrimaryTask().getCost().toString());
+        timeToCompleteField.setText(TimeUtil.toString(
+                task.getPrimaryTask().getTimeToComplete()));
+        descriptionTextArea.setText(task.getPrimaryTask().getDescription());
+    }
+
+    private void showDescription(AssignedTask task) {
+        if (task == null) {
+            commentsTextArea.setText("");
+        } else {
+            commentsTextArea.setText(task.getDescription());
         }
-        return true;
+    }
+
+    private void updateTaskToAssignField() {
+        tasksToAssignField.setText(Integer.toString(tasksToAssign));
     }
 }

@@ -59,7 +59,8 @@ public class ListOfSkillsTableViewController {
                     return true;
                 }
                 String lowerCasedNewValue = newValue.toLowerCase();
-                if (skill.getName().contains(lowerCasedNewValue)) {
+                if (skill.getName().toLowerCase()
+                        .contains(lowerCasedNewValue)) {
                     return true;
                 }
                 return false;

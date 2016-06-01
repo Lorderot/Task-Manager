@@ -9,19 +9,15 @@
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
-          <Menu mnemonicParsing="false" text="Файл">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Вийти" />
-            </items>
-          </Menu>
             <Menu mnemonicParsing="false" text="Таблиці">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#handlePlanes" text="Літаки" />
-                  <MenuItem mnemonicParsing="false" text="Проекти" />
-                  <MenuItem mnemonicParsing="false" text="Завдання" />
-                  <MenuItem mnemonicParsing="false" text="Призначенні завдання" />
                   <MenuItem mnemonicParsing="false" onAction="#handlePrimaryTasks" text="Атомарні роботи" />
-                  <MenuItem mnemonicParsing="false" text="Запити на нових працівників" />
+              </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Звіти">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#handleCreateProblemReport" text="Проекти" />
               </items>
             </Menu>
         </menus>

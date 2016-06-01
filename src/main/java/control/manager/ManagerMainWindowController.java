@@ -4,7 +4,6 @@ import DAO.PersonDAO;
 import DAO.ProblemDAO;
 import app.MainApp;
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,10 +14,19 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import model.Person;
 import model.Problem;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.util.JRLoader;
+import org.hibernate.Session;
+import util.DateUtil;
 import util.HibernateUtil;
 
-import java.util.Date;
+import java.sql.Connection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ManagerMainWindowController {
     private PersonDAO personDAO;
@@ -41,9 +49,9 @@ public class ManagerMainWindowController {
     @FXML
     private TableColumn<Problem, Integer> priorityField;
     @FXML
-    private TableColumn<Problem, Date> updateField;
+    private TableColumn<Problem, String> updateField;
     @FXML
-    private TableColumn<Problem, Date> deadlineField;
+    private TableColumn<Problem, String> deadlineField;
     @FXML
     private TableColumn<Problem, String> isFinishedField;
     @FXML
@@ -76,15 +84,23 @@ public class ManagerMainWindowController {
         priorityField.setCellValueFactory(cellData ->
                new ReadOnlyObjectWrapper<>(cellData.getValue().getPriority()));
         updateField.setCellValueFactory(cellData ->
-                new SimpleObjectProperty<>(cellData.getValue().getUpdateDate()));
+                new SimpleStringProperty(DateUtil.toString(
+                        cellData.getValue().getUpdateDate())));
         deadlineField.setCellValueFactory(cellData ->
-                new SimpleObjectProperty<>(cellData.getValue().getDeadline()));
+                new SimpleStringProperty(
+                        DateUtil.toString(cellData.getValue().getDeadline())));
         isFinishedField.setCellValueFactory(cellData -> {
-            if (cellData.getValue().getSolved()) {
-                return new SimpleStringProperty("Так");
-            } else {
-                return new SimpleStringProperty("Ні");
+            Boolean isSolved = cellData.getValue().getSolved();
+            if (isSolved == null) {
+                return new SimpleStringProperty("");
             }
+            String solved;
+            if (isSolved) {
+                solved = "Так";
+            } else {
+                solved = "Ні";
+            }
+            return new SimpleStringProperty(solved);
         });
     }
 
@@ -124,6 +140,21 @@ public class ManagerMainWindowController {
     public void handleExit() {
         HibernateUtil.shutDown();
         mainStage.close();
+    }
+
+    public void handleCreateProblemReport() {
+        try {
+            JasperReport jasperReport = (JasperReport) JRLoader.loadObject(
+                    this.getClass().getResource("/reports/reportProblems.jasper"));
+            Session session = HibernateUtil.getSession();
+            Connection connection = HibernateUtil.getConnection(session);
+            Map parameters = new HashMap<>();
+            JasperPrint jasperPrint = JasperFillManager.fillReport(
+                    jasperReport, parameters, connection);
+            mainApp.showJasperViewer(jasperPrint, mainStage);
+        } catch (JRException e) {
+            e.printStackTrace();
+        }
     }
 
     public void loadData() {
@@ -180,6 +211,7 @@ public class ManagerMainWindowController {
             });
         });
         SortedList<Problem> sortedList = new SortedList<>(filteredList);
+        sortedList.comparatorProperty().bind(problemTableView.comparatorProperty());
         problemTableView.setItems(sortedList);
     }
 

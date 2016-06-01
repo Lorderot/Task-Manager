@@ -16,6 +16,7 @@ import model.Person;
 import model.Problem;
 import model.Request;
 import model.Skill;
+import util.DateUtil;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -80,6 +81,8 @@ public class RequestTableViewController {
         respondDescriptionTextArea.setEditable(false);
         respondDescriptionTextArea.setWrapText(true);
         requestDescriptionTextArea.setWrapText(true);
+        requestTableView.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldValue, newValue) -> showDescriptions(newValue));
     }
 
     public RequestTableViewController() {
@@ -143,6 +146,21 @@ public class RequestTableViewController {
         createFilter();
     }
 
+    public void handleCancelRequest() {
+        Request request = requestTableView
+                .getSelectionModel().getSelectedItem();
+        if (request == null) {
+            MainApp.showAlert(Alert.AlertType.ERROR,"",
+                    "Запит не вибрано!",
+                    "Виберіть, будь ласка, запит!");
+        } else {
+            RequestDAO requestDAO = new RequestDAO();
+            request.setCanceled(true);
+            observableList.remove(request);
+            requestDAO.update(request);
+        }
+    }
+
     public void handleShowSkills() {
         Request request = requestTableView.getSelectionModel()
                 .selectedItemProperty().get();
@@ -191,11 +209,11 @@ public class RequestTableViewController {
                 }
                 String lowerCasedNewValue = newValue.toLowerCase();
                 if (request.getTask().getPrimaryTask()
-                        .getName().contains(lowerCasedNewValue)) {
+                        .getName().toLowerCase().contains(lowerCasedNewValue)) {
                     return true;
                 }
-                if (request.getDateOfRequest()
-                        .toString().contains(lowerCasedNewValue)) {
+                if (DateUtil.toString(request.getDateOfRequest()).toLowerCase()
+                        .contains(lowerCasedNewValue)) {
                     return true;
                 }
                 return false;
@@ -205,5 +223,15 @@ public class RequestTableViewController {
                 new SortedList<>(filteredData);
         sortedData.comparatorProperty().bind(requestTableView.comparatorProperty());
         requestTableView.setItems(sortedData);
+    }
+
+    private void showDescriptions(Request request) {
+        if (request == null) {
+            requestDescriptionTextArea.setText("");
+            respondDescriptionTextArea.setText("");
+        } else {
+            respondDescriptionTextArea.setText(request.getRespond());
+            requestDescriptionTextArea.setText(request.getDescription());
+        }
     }
 }

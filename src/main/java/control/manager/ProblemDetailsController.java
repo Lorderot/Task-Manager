@@ -1,9 +1,9 @@
 package control.manager;
 
+import DAO.ProblemDAO;
 import DAO.TaskDAO;
 import app.MainApp;
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,6 +14,8 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import model.Problem;
 import model.Task;
+import util.DateUtil;
+import util.TimeUtil;
 
 import java.util.Date;
 import java.util.List;
@@ -23,25 +25,24 @@ public class ProblemDetailsController {
     private MainApp mainApp;
     private Problem problem;
     private TaskDAO taskDAO;
+    private ProblemDAO problemDAO;
+    private double progress;
+    private long timeToFinish;
     private ObservableList<Task> observableList;
     @FXML
     private TableView<Task> taskTableView;
     @FXML
     private TableColumn<Task, String> nameTaskColumn;
     @FXML
-    private TableColumn<Task, Date> createDateColumn;
+    private TableColumn<Task, String> createDateColumn;
     @FXML
-    private TableColumn<Task, Date> deadlineColumn;
+    private TableColumn<Task, String> deadlineColumn;
     @FXML
     private TableColumn<Task, Integer> priorityColumn;
     @FXML
     private TableColumn<Task, Integer> amountColumn;
     @FXML
-    private TableColumn<Task, String> descriptionColumn;
-    @FXML
     private TextArea problemDescriptionTextArea;
-    @FXML
-    private TextArea taskDescriptionTextArea;
     @FXML
     private TextField problemNameField;
     @FXML
@@ -52,38 +53,36 @@ public class ProblemDetailsController {
     private Label priorityLabel;
     @FXML
     private TextField filterField;
-
+    @FXML
+    private ProgressBar progressBar;
+    @FXML
+    private TextField timeToFinishTextField;
     @FXML
     public void initialize() {
         nameTaskColumn.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue()
                         .getPrimaryTask().getName()));
         createDateColumn.setCellValueFactory(cellData ->
-                new SimpleObjectProperty<>(cellData.getValue().getCreateDate()));
+                new SimpleStringProperty(DateUtil.toString(
+                        cellData.getValue().getCreateDate())));
         deadlineColumn.setCellValueFactory(cellData ->
-                new SimpleObjectProperty<>(cellData.getValue().getDeadline()));
+                new SimpleStringProperty(DateUtil.toString(
+                        cellData.getValue().getDeadline())));
         priorityColumn.setCellValueFactory(cellData ->
                 new ReadOnlyObjectWrapper<>(cellData.getValue().getPriority()));
         amountColumn.setCellValueFactory(cellData ->
                 new ReadOnlyObjectWrapper<>(cellData.getValue().getAmount()));
-        descriptionColumn.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getDescription()));
         problemNameField.setEditable(false);
         createDateField.setEditable(false);
         deadlineField.setEditable(false);
-        taskDescriptionTextArea.setEditable(false);
         problemDescriptionTextArea.setEditable(false);
-        showDescription(null);
-        taskTableView.getSelectionModel().selectedItemProperty()
-                .addListener(((observable, oldValue, newValue) -> {
-                    showDescription(newValue);
-                }));
         problemDescriptionTextArea.setWrapText(true);
-        taskDescriptionTextArea.setWrapText(true);
+        timeToFinishTextField.setEditable(false);
     }
 
     public ProblemDetailsController() {
         taskDAO = new TaskDAO();
+        problemDAO = new ProblemDAO();
     }
 
     public void updateData() {
@@ -96,6 +95,16 @@ public class ProblemDetailsController {
 
     public void handleExit() {
         stage.close();
+    }
+
+    public void handleCreateTask() {
+        Task task = mainApp.createTaskDialog(stage);
+        if (task != null) {
+            task.setProblem(problem);
+            task.setCreateDate(new Date());
+            taskDAO.addTask(task);
+            updateData();
+        }
     }
 
     public void handleShowTaskDetails() {
@@ -125,13 +134,18 @@ public class ProblemDetailsController {
     public void loadData() {
         loadDataFromDB();
         createFilter();
+        progress = problemDAO.getProgress(problem.getIdentifier());
+        progressBar.setProgress(progress);
+        timeToFinish = problemDAO.getTime(problem.getIdentifier());
+        timeToFinishTextField.setText(TimeUtil
+                .toStringSpecialFormat(timeToFinish));
     }
 
     public void setProblem(Problem problem) {
         this.problem = problem;
         priorityLabel.setText(problem.getPriority().toString());
-        createDateField.setText(problem.getCreateDate().toString());
-        deadlineField.setText(problem.getDeadline().toString());
+        createDateField.setText(DateUtil.toString(problem.getCreateDate()));
+        deadlineField.setText(DateUtil.toString(problem.getDeadline()));
         problemNameField.setText(problem.getName());
         problemDescriptionTextArea.setText(problem.getDescription());
     }
@@ -142,15 +156,6 @@ public class ProblemDetailsController {
 
     public void setMainApp(MainApp mainApp) {
         this.mainApp = mainApp;
-    }
-
-    private void showDescription(Task task) {
-        if (task == null) {
-            taskDescriptionTextArea.setText("");
-        } else {
-            taskDescriptionTextArea.setText(task.getPrimaryTask()
-                    .getDescription());
-        }
     }
 
     private void loadDataFromDB() {
@@ -175,6 +180,7 @@ public class ProblemDetailsController {
             });
         }));
         SortedList<Task> sortedList = new SortedList<>(filteredList);
+        sortedList.comparatorProperty().bind(taskTableView.comparatorProperty());
         taskTableView.setItems(sortedList);
     }
 }

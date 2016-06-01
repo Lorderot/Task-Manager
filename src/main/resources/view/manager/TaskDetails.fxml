@@ -5,165 +5,119 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="465.0" prefWidth="719.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="control.manager.TaskDetailsController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="501.0" prefWidth="716.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="control.manager.TaskDetailsController">
    <children>
-      <GridPane layoutX="18.0" layoutY="14.0" prefHeight="208.0" prefWidth="338.0">
+      <GridPane layoutX="372.0" layoutY="8.0" prefHeight="191.0" prefWidth="326.0">
         <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="225.0" minWidth="10.0" prefWidth="171.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="303.0" minWidth="10.0" prefWidth="242.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="163.0" minWidth="10.0" prefWidth="163.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="224.0" minWidth="10.0" prefWidth="163.0" />
         </columnConstraints>
         <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label text="Ім'я:">
+            <Label text="Завдання:" GridPane.rowIndex="2">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label text="Прізвище:" GridPane.rowIndex="1">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Label>
-            <Label text="Дата призначення:" GridPane.rowIndex="2">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Label>
-            <Label text="Оновлено:" GridPane.rowIndex="3">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Label>
-            <Label text="Дата здачі:" GridPane.rowIndex="5">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Label>
-            <TextField fx:id="firstNameField" GridPane.columnIndex="1">
+            <TextField fx:id="nameOfJobTextField" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <font>
                   <Font size="14.0" />
                </font>
             </TextField>
-            <TextField fx:id="lastNameField" GridPane.columnIndex="1" GridPane.rowIndex="1">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </TextField>
-            <TextField fx:id="assignmentDateField" GridPane.columnIndex="1" GridPane.rowIndex="2">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </TextField>
-            <TextField fx:id="updateField" GridPane.columnIndex="1" GridPane.rowIndex="3">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </TextField>
-            <TextField fx:id="deadlineField" GridPane.columnIndex="1" GridPane.rowIndex="4">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </TextField>
-            <Label text="Дедлайн:" GridPane.rowIndex="4">
+            <Label text="Оплата:" GridPane.rowIndex="3">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <TextField fx:id="finishDateField" GridPane.columnIndex="1" GridPane.rowIndex="5">
+            <Label text="Час виконання:" GridPane.rowIndex="4">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <TextField fx:id="costField" GridPane.columnIndex="1" GridPane.rowIndex="3">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="timeToCompleteField" GridPane.columnIndex="1" GridPane.rowIndex="4">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </TextField>
+            <Label text="Дедлайн:" GridPane.rowIndex="1">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <TextField fx:id="deadlineField" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="creationDateField" GridPane.columnIndex="1">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </TextField>
+            <Label prefHeight="28.0" prefWidth="111.0" text="Дата створення:">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label text="Не призначено завдань:" GridPane.rowIndex="5">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <TextField fx:id="tasksToAssignField" GridPane.columnIndex="1" GridPane.rowIndex="5">
                <font>
                   <Font size="14.0" />
                </font>
             </TextField>
          </children>
       </GridPane>
-      <Label layoutX="371.0" layoutY="383.0" text="Зараховано:">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Label>
-      <GridPane layoutX="367.0" layoutY="19.0" prefHeight="103.0" prefWidth="338.0">
-        <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="163.0" minWidth="10.0" prefWidth="128.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="224.0" minWidth="10.0" prefWidth="210.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        </rowConstraints>
-         <children>
-            <Label text="Завдання:">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Label>
-            <TextField fx:id="taskNameField" GridPane.columnIndex="1">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </TextField>
-            <Label text="Оплата:" GridPane.rowIndex="1">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Label>
-            <Label text="Час виконання:" GridPane.rowIndex="2">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Label>
-            <TextField fx:id="costField" GridPane.columnIndex="1" GridPane.rowIndex="1">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </TextField>
-            <TextField fx:id="timeToCompleteField" GridPane.columnIndex="1" GridPane.rowIndex="2">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </TextField>
-         </children>
-      </GridPane>
-      <ProgressBar fx:id="progressBar" layoutX="495.0" layoutY="325.0" prefHeight="30.0" prefWidth="210.0" progress="0.0" />
-      <CheckBox fx:id="isFinishedCheckBox" layoutX="495.0" layoutY="383.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="8.0">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </CheckBox>
-      <Button layoutX="14.0" layoutY="430.0" mnemonicParsing="false" onAction="#handleAssignWorker" prefHeight="25.0" prefWidth="141.0" text="Призначити робітника" />
-      <Button layoutX="177.0" layoutY="430.0" mnemonicParsing="false" onAction="#handleRemoveWorker" prefHeight="25.0" prefWidth="131.0" text="Звільнити робітника" />
-      <Button layoutX="329.0" layoutY="430.0" mnemonicParsing="false" onAction="#handleShowProfile" prefHeight="25.0" prefWidth="121.0" text="Профіль робітника" />
-      <Button layoutX="473.0" layoutY="430.0" mnemonicParsing="false" onAction="#handleConfirmChanges" prefHeight="25.0" prefWidth="121.0" text="Підтвердити зміни" />
-      <Button layoutX="614.0" layoutY="381.0" mnemonicParsing="false" onAction="#update" prefHeight="25.0" prefWidth="79.0" text="Оновити" />
-      <Button layoutX="614.0" layoutY="430.0" mnemonicParsing="false" onAction="#handleExit" prefHeight="25.0" prefWidth="79.0" text="Вийти" />
-      <TextArea fx:id="additionalDescriptionTextArea" layoutX="151.0" layoutY="238.0" prefHeight="171.0" prefWidth="205.0">
+      <Button layoutX="14.0" layoutY="466.0" mnemonicParsing="false" onAction="#handleAssignWorker" prefHeight="25.0" prefWidth="141.0" text="Призначити робітника" />
+      <Button layoutX="183.0" layoutY="466.0" mnemonicParsing="false" onAction="#handleRemoveWorker" prefHeight="25.0" prefWidth="141.0" text="Звільнити робітника" />
+      <Button layoutX="358.0" layoutY="466.0" mnemonicParsing="false" onAction="#handleShowProfile" prefHeight="25.0" prefWidth="141.0" text="Профіль робітника" />
+      <Button layoutX="517.0" layoutY="466.0" mnemonicParsing="false" onAction="#handleCancelRequest" prefHeight="25.0" prefWidth="107.0" text="Відмінити запит" />
+      <Button layoutX="517.0" layoutY="426.0" mnemonicParsing="false" onAction="#handleMakeRequest" prefHeight="25.0" prefWidth="107.0" text="Зробити запит" />
+      <Button layoutX="637.0" layoutY="426.0" mnemonicParsing="false" onAction="#loadData" prefHeight="25.0" prefWidth="72.0" text="Оновити" />
+      <Button layoutX="637.0" layoutY="466.0" mnemonicParsing="false" onAction="#handleExit" prefHeight="25.0" prefWidth="72.0" text="Вийти" />
+      <TextArea fx:id="commentsTextArea" layoutX="3.0" layoutY="342.0" prefHeight="111.0" prefWidth="360.0">
          <font>
             <Font size="14.0" />
          </font>
       </TextArea>
-      <Label layoutX="18.0" layoutY="236.0" text="Додатковий опис:">
+      <Label layoutX="3.0" layoutY="320.0" prefHeight="20.0" prefWidth="141.0" text="Коментарі робітнику:">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <Label layoutX="367.0" layoutY="130.0" text="Опис:">
+      <Label layoutX="517.0" layoutY="212.0" text="Опис:">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <TextArea fx:id="descriptionTextArea" layoutX="495.0" layoutY="136.0" prefHeight="171.0" prefWidth="210.0" />
-      <Label layoutX="371.0" layoutY="330.0" text="Виконано:">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Label>
-      <Label fx:id="confirmation" layoutX="473.0" layoutY="409.0" textFill="#05e105" />
+      <TextArea fx:id="descriptionTextArea" layoutX="372.0" layoutY="238.0" prefHeight="172.0" prefWidth="336.0" />
+      <TableView fx:id="taskTableView" layoutX="2.0" layoutY="8.0" prefHeight="307.0" prefWidth="360.0">
+        <columns>
+          <TableColumn prefWidth="139.0" resizable="false" text="Робітник">
+               <columns>
+                  <TableColumn fx:id="firstNameColumn" prefWidth="100.0" resizable="false" text="Ім'я" />
+                  <TableColumn fx:id="lastNameColumn" prefWidth="115.0" resizable="false" text="Прізвище" />
+               </columns>
+            </TableColumn>
+          <TableColumn fx:id="amountOfTasksColumn" prefWidth="70.0" resizable="false" text="Кількість" />
+            <TableColumn fx:id="isFinishedColumn" prefWidth="74.0" resizable="false" text="Зараховано" />
+        </columns>
+      </TableView>
+      <Button layoutX="387.0" layoutY="426.0" mnemonicParsing="false" onAction="#handleSetFinished" prefHeight="25.0" prefWidth="111.0" text="Зарахувати" />
    </children>
 </AnchorPane>

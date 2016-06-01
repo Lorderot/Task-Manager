@@ -1,5 +1,7 @@
 package model;
 
+import util.TimeUtil;
+
 import javax.persistence.*;
 import java.sql.Time;
 
@@ -55,11 +57,11 @@ public class PrimaryTask {
     }
 
     public Time getTimeToComplete() {
-        return new Time(timeToComplete);
+        return new Time(timeToComplete - TimeUtil.TIME_OFFSET);
     }
 
     public void setTimeToComplete(Long timeToComplete) {
-        this.timeToComplete = timeToComplete;
+        this.timeToComplete = timeToComplete + TimeUtil.TIME_OFFSET;
     }
 
     public String getDescription() {

@@ -1,9 +1,6 @@
 package model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "skills")
@@ -15,14 +12,26 @@ public class Skill {
     private String description;
     @Column(name = "name")
     private String name;
+    @Transient
+    private Boolean checked;
 
     public Skill() {
+        checked = false;
     }
 
     public Skill(Integer identifier, String description, String name) {
         this.identifier = identifier;
         this.description = description;
         this.name = name;
+        checked = false;
+    }
+
+    public Boolean getChecked() {
+        return checked;
+    }
+
+    public void setChecked(Boolean checked) {
+        this.checked = checked;
     }
 
     public Integer getIdentifier() {

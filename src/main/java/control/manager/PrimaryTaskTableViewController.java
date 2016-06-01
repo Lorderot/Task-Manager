@@ -7,14 +7,13 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import model.PrimaryTask;
-import org.hibernate.exception.ConstraintViolationException;
-import view.ViewParameters;
 
 import java.sql.Time;
 import java.util.List;
@@ -33,8 +32,6 @@ public class PrimaryTaskTableViewController {
     private TableColumn<PrimaryTask, Integer> costColumn;
     @FXML
     private TableColumn<PrimaryTask, Time> timeToCompleteColumn;
-    @FXML
-    private TableColumn<PrimaryTask, String> descriptionColumn;
     @FXML
     private TextField filterField;
 
@@ -56,42 +53,6 @@ public class PrimaryTaskTableViewController {
 
         timeToCompleteColumn.setCellValueFactory(
                 new PropertyValueFactory<>("timeToComplete"));
-
-        descriptionColumn.setCellValueFactory(
-                new PropertyValueFactory<>("description"));
-        descriptionColumn.setCellFactory(new Callback<TableColumn<PrimaryTask, String>,
-                        TableCell<PrimaryTask, String>>() {
-            @Override
-            public TableCell<PrimaryTask, String> call(TableColumn<PrimaryTask,
-                    String> param) {
-                final TableCell<PrimaryTask, String> cell =
-                        new TableCell<PrimaryTask, String>(){
-                            private Text text;
-                            @Override
-                            protected void updateItem(String item, boolean empty) {
-                                super.updateItem(item, empty);
-                                if (!isEmpty()) {
-                                    text = new Text();
-                                    text.setWrappingWidth(
-                                            ViewParameters.descriptionCellWidth);
-                                    String shortText;
-                                    if (ViewParameters.descriptionLength < item.length()) {
-                                        shortText = item.substring(0,
-                                                ViewParameters.descriptionLength)
-                                                + "...";
-                                    } else {
-                                        shortText = item;
-                                    }
-                                    text.setText(shortText);
-                                    setGraphic(text);
-                                } else {
-                                    setGraphic(null);
-                                }
-                            }
-                        };
-                return cell;
-            }
-        });
         descriptionTextArea.setEditable(false);
         descriptionTextArea.setWrapText(true);
         showDescription(null);
@@ -101,16 +62,11 @@ public class PrimaryTaskTableViewController {
     }
 
     public void handleAdd() {
-        mainapp.showPrimaryTaskEditDialog(this);
-    }
-
-    public boolean addPrimaryTask(PrimaryTask primaryTask)
-            throws ConstraintViolationException {
-        if (primaryTaskDAO.add(primaryTask)) {
+        PrimaryTask primaryTask =
+                mainapp.showPrimaryTaskEditDialog(this);
+        if (primaryTask != null) {
             observableList.add(primaryTask);
-            return true;
         }
-        return false;
     }
 
     public void handleExit() {

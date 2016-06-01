@@ -23,10 +23,6 @@ public class Person {
     private String education;
     @Column(name = "login", length = 100)
     private String login;
-    @Column(name = "password", length = 100)
-    private String password;
-    @Column(name = "salt", length = 10)
-    private String salt;
     @Column(name = "birthday")
     @Temporal(value = TemporalType.DATE)
     private Date birthday;
@@ -38,9 +34,11 @@ public class Person {
     private String skype;
     @Column(name = "access_type")
     private String userType;
+    @Transient
+    private String password;
 
     public Person(String firstName, String lastName, Date dateIn, Date dateOut,
-                  String education, String login, String password, String salt,
+                  String education, String login, String password,
                   Date birthday, String phone_number, String email,
                   String skype, String userType, Integer identifier) {
         this.firstName = firstName;
@@ -50,7 +48,6 @@ public class Person {
         this.education = education;
         this.login = login;
         this.password = password;
-        this.salt = salt;
         this.birthday = birthday;
         this.phone_number = phone_number;
         this.email = email;
@@ -124,14 +121,6 @@ public class Person {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getSalt() {
-        return salt;
-    }
-
-    public void setSalt(String salt) {
-        this.salt = salt;
     }
 
     public Date getBirthday() {

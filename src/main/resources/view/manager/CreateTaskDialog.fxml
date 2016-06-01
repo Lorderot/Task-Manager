@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="395.0" prefWidth="648.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="control.manager.CreateTaskDialogController">
+   <children>
+      <TextField fx:id="filterField" layoutX="59.0" layoutY="2.0" prefHeight="25.0" prefWidth="222.0">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </TextField>
+      <TableView fx:id="primaryTaskTableView" layoutY="40.0" prefHeight="345.0" prefWidth="281.0">
+        <columns>
+          <TableColumn fx:id="nameColumn" prefWidth="97.0" resizable="false" text="Назва" />
+          <TableColumn fx:id="costColumn" prefWidth="74.0" resizable="false" text="Оплата" />
+            <TableColumn fx:id="timeToCompleteColumn" prefWidth="105.0" resizable="false" text="Час виконання" />
+        </columns>
+      </TableView>
+      <GridPane layoutX="290.0" layoutY="227.0" prefHeight="115.0" prefWidth="281.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="118.0" minWidth="10.0" prefWidth="80.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="201.0" minWidth="10.0" prefWidth="201.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label text="Кількість:">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label text="Дедлайн:" GridPane.rowIndex="1">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label text="Пріорітет:" GridPane.rowIndex="2">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <TextField fx:id="amountField" GridPane.columnIndex="1">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="deadlineField" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="priorityField" GridPane.columnIndex="1" GridPane.rowIndex="2">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </TextField>
+         </children>
+      </GridPane>
+      <Label layoutX="7.0" layoutY="7.0" text="Пошук:">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="404.0" layoutY="7.0" text="Опис завдання:">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Button layoutX="290.0" layoutY="362.0" mnemonicParsing="false" onAction="#handleCreateTask" text="Створити" />
+      <Button layoutX="564.0" layoutY="362.0" mnemonicParsing="false" onAction="#handleCancel" text="Відмінити" />
+      <TextArea fx:id="primaryTaskDescriptionTextArea" layoutX="288.0" layoutY="40.0" prefHeight="170.0" prefWidth="347.0">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </TextArea>
+   </children>
+</AnchorPane>

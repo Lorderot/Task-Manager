@@ -19,15 +19,6 @@
             <Font size="13.0" />
          </font>
       </Label>
-      <Group layoutX="14.0" layoutY="5.0" AnchorPane.bottomAnchor="8.0">
-         <children>
-            <Button layoutX="350.0" layoutY="462.0" mnemonicParsing="false" onAction="#updateData" prefHeight="30.0" prefWidth="98.0" text="Оновити дані" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="497.0" />
-            <Button layoutX="10.0" layoutY="462.0" mnemonicParsing="false" onAction="#handleMoveToTask" prefHeight="30.0" prefWidth="134.0" text="Перейти до завдання" AnchorPane.bottomAnchor="14.0" />
-            <Button layoutX="618.0" layoutY="461.0" mnemonicParsing="false" onAction="#handleExit" prefHeight="30.0" prefWidth="77.0" text="Вийти" AnchorPane.bottomAnchor="-460.0" AnchorPane.rightAnchor="4.0" />
-            <Button layoutX="180.0" layoutY="462.0" mnemonicParsing="false" onAction="#handleShowProfile" prefHeight="30.0" prefWidth="134.0" text="Профіль робітника" AnchorPane.bottomAnchor="-460.0" />
-            <Button layoutX="484.0" layoutY="462.0" mnemonicParsing="false" onAction="#handleShowSkills" prefHeight="30.0" prefWidth="98.0" text="Перелік вмінь" AnchorPane.bottomAnchor="-462.0" AnchorPane.rightAnchor="107.0" />
-         </children>
-      </Group>
       <TableView fx:id="requestTableView" layoutY="28.0" prefHeight="434.0" prefWidth="709.0" AnchorPane.bottomAnchor="44.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="241.0" AnchorPane.topAnchor="28.0">
         <columns>
             <TableColumn prefWidth="500.0" text="Робітник">
@@ -48,5 +39,11 @@
          </font>
       </Label>
       <TextArea fx:id="respondDescriptionTextArea" layoutX="722.0" layoutY="273.0" prefHeight="219.0" prefWidth="226.0" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="273.0" />
+      <Button layoutY="471.0" mnemonicParsing="false" onAction="#handleMoveToTask" prefHeight="30.0" prefWidth="136.0" text="Перейти до завдання" />
+      <Button layoutX="142.0" layoutY="472.0" mnemonicParsing="false" onAction="#handleShowProfile" prefHeight="30.0" prefWidth="122.0" text="Профіль робітника" />
+      <Button layoutX="270.0" layoutY="471.0" mnemonicParsing="false" onAction="#handleCancelRequest" prefHeight="30.0" prefWidth="128.0" text="Відмінити запит" />
+      <Button layoutX="403.0" layoutY="471.0" mnemonicParsing="false" onAction="#handleShowSkills" prefHeight="30.0" prefWidth="116.0" text="Перелік вмінь" />
+      <Button layoutX="524.0" layoutY="471.0" mnemonicParsing="false" onAction="#updateData" prefHeight="30.0" prefWidth="98.0" text="Оновити дані" />
+      <Button layoutX="627.0" layoutY="471.0" mnemonicParsing="false" onAction="#handleExit" prefHeight="30.0" prefWidth="83.0" text="Вийти" />
    </children>
 </AnchorPane>

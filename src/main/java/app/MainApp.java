@@ -6,15 +6,19 @@ import control.PlaneController;
 import control.ProfileController;
 import control.manager.*;
 import javafx.application.Application;
+import javafx.embed.swing.SwingNode;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.*;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.swing.JRViewer;
 import util.HibernateUtil;
 
 import java.io.IOException;
@@ -37,11 +41,10 @@ public class MainApp extends Application {
         switch (person.getUserType()) {
             case MANAGER: case ADMIN: {
                 showManagerMainWindow(person);
-                return;
+                break;
             }
             case WORKER: {
                 showWorkerMainWindow(person);
-                return;
             }
         }
     }
@@ -54,6 +57,7 @@ public class MainApp extends Application {
 
             Scene scene = new Scene(rootLayout);
             mainStage.setScene(scene);
+            mainStage.setResizable(false);
             ManagerMainWindowController controller = loader.getController();
             controller.setPerson(person);
             controller.loadData();
@@ -87,6 +91,7 @@ public class MainApp extends Application {
             loader.setLocation(getClass().getResource("/view/LoginWindow.fxml"));
             Parent root = loader.load();
             Stage loginStage = new Stage();
+            loginStage.setResizable(false);
             loginStage.setTitle("Авторизація");
             loginStage.setScene(new Scene(root));
             LoginWindowController controller = loader.getController();
@@ -105,6 +110,7 @@ public class MainApp extends Application {
             loader.setLocation(getClass().getResource("/view/PasswordEditDialog.fxml"));
             AnchorPane root = loader.load();
             Stage passwordStage = new Stage();
+            passwordStage.setResizable(false);
             passwordStage.setTitle("Зміна паролю");
             passwordStage.initOwner(mainStage);
             passwordStage.initModality(Modality.WINDOW_MODAL);
@@ -126,6 +132,7 @@ public class MainApp extends Application {
             loader.setLocation(getClass().getResource("/view/Profile.fxml"));
             AnchorPane root = loader.load();
             Stage profileStage = new Stage();
+            profileStage.setResizable(false);
             profileStage.setTitle("Профіль");
             profileStage.initOwner(mainStage);
             profileStage.initModality(Modality.WINDOW_MODAL);
@@ -147,6 +154,7 @@ public class MainApp extends Application {
             AnchorPane root = loader.load();
 
             Stage primaryTasksStage = new Stage();
+            primaryTasksStage.setResizable(false);
             primaryTasksStage.initOwner(mainStage);
             primaryTasksStage.initModality(Modality.WINDOW_MODAL);
             primaryTasksStage.setTitle("Атомарні роботи");
@@ -160,7 +168,7 @@ public class MainApp extends Application {
         }
     }
 
-    public void showPrimaryTaskEditDialog(
+    public PrimaryTask showPrimaryTaskEditDialog(
             PrimaryTaskTableViewController primaryTaskTableViewController) {
         try {
             FXMLLoader loader = new FXMLLoader();
@@ -168,6 +176,7 @@ public class MainApp extends Application {
             AnchorPane root = loader.load();
 
             Stage primaryTaskEditDialogStage = new Stage();
+            primaryTaskEditDialogStage.setResizable(false);
             primaryTaskEditDialogStage.setTitle("Атомарна робота");
             primaryTaskEditDialogStage.setScene(new Scene(root));
             primaryTaskEditDialogStage.initOwner(
@@ -175,10 +184,12 @@ public class MainApp extends Application {
             primaryTaskEditDialogStage.initModality(Modality.WINDOW_MODAL);
             PrimaryTaskEditDialogController controller = loader.getController();
             controller.setPrimaryTaskEditDialogStage(primaryTaskEditDialogStage);
-            controller.setController(primaryTaskTableViewController);
+            controller.loadData();
             primaryTaskEditDialogStage.showAndWait();
+            return controller.getPrimaryTask();
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
     }
 
@@ -250,6 +261,7 @@ public class MainApp extends Application {
             AnchorPane root = loader.load();
 
             Stage requestStage = new Stage();
+            requestStage.setResizable(false);
             requestStage.setTitle("Запити");
             requestStage.setScene(new Scene(root));
             requestStage.initOwner(stage);
@@ -302,16 +314,18 @@ public class MainApp extends Application {
             controller.setStage(taskStage);
             controller.setMainApp(this);
             controller.setTask(task);
+            controller.loadData();
             taskStage.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public Person showChoosePersonDialog(List<Person> persons, Stage stage) {
+    public AssignedTask showAssignTaskDialog(List<Person> persons,
+                                             int maxAmount, Stage stage) {
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/view/manager/ChoosePersonDialog.fxml"));
+            loader.setLocation(getClass().getResource("/view/manager/AssignTaskDialog.fxml"));
             AnchorPane root = loader.load();
 
             Stage personStage = new Stage();
@@ -320,15 +334,79 @@ public class MainApp extends Application {
             personStage.setScene(new Scene(root));
             personStage.initOwner(stage);
             personStage.initModality(Modality.WINDOW_MODAL);
-            ChoosePersonDialogController controller = loader.getController();
+            AssignTaskDialogController controller = loader.getController();
             controller.setStage(personStage);
             controller.setMainApp(this);
+            controller.setMaxAmount(maxAmount);
             controller.loadData(persons);
             personStage.showAndWait();
-            return controller.getChosenPerson();
+            return controller.getAssignedTask();
         } catch (IOException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public void showJasperViewer(JasperPrint jasperPrint, Stage stage) {
+        Stage jasperStage = new Stage();
+        SwingNode swingNode = new SwingNode();
+        swingNode.setContent(new JRViewer(jasperPrint));
+        StackPane stackPane = new StackPane();
+        stackPane.getChildren().add(swingNode);
+        Scene scene = new Scene(stackPane);
+        jasperStage.setScene(scene);
+        jasperStage.setFullScreen(false);
+        jasperStage.setTitle("Звіт");
+        jasperStage.initOwner(stage);
+        jasperStage.setResizable(false);
+        jasperStage.initModality(Modality.WINDOW_MODAL);
+        jasperStage.showAndWait();
+    }
+
+    public Task createTaskDialog(Stage stage) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(this.getClass()
+                    .getResource("/view/manager/CreateTaskDialog.fxml"));
+            AnchorPane root = fxmlLoader.load();
+
+            Stage taskStage = new Stage();
+            taskStage.setResizable(false);
+            taskStage.setScene(new Scene(root));
+            taskStage.initOwner(stage);
+            taskStage.initModality(Modality.WINDOW_MODAL);
+            taskStage.setResizable(false);
+            taskStage.setTitle("Нове завдання");
+            CreateTaskDialogController controller = fxmlLoader.getController();
+            controller.setStage(taskStage);
+            controller.loadData();
+            taskStage.showAndWait();
+            return controller.getCreatedTask();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public void createRequestDialog(Stage stage, Task task) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(this.getClass()
+                    .getResource("/view/manager/CreateRequestDialog.fxml"));
+            AnchorPane root = fxmlLoader.load();
+
+            Stage taskStage = new Stage();
+            taskStage.setScene(new Scene(root));
+            taskStage.initOwner(stage);
+            taskStage.initModality(Modality.WINDOW_MODAL);
+            taskStage.setResizable(false);
+            taskStage.setTitle("Нове завдання");
+            CreateRequestDialogController controller = fxmlLoader.getController();
+            controller.setStage(taskStage);
+            controller.setTask(task);
+            taskStage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

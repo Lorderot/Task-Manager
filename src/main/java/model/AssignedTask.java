@@ -21,13 +21,12 @@ public class AssignedTask {
     @Column(name = "date_finish")
     @Temporal(TemporalType.DATE)
     private Date finishDate;
-    @Column(name = "update")
-    @Temporal(TemporalType.DATE)
-    private Date update;
-    @Column(name = "progress")
-    private Double progress;
     @Column(name = "finish")
     private Boolean finished;
+    @Column(name = "amount")
+    private Integer amount;
+    @Column(name = "description")
+    private String description;
 
     public AssignedTask() {
     }
@@ -72,23 +71,20 @@ public class AssignedTask {
         this.finishDate = finishDate;
     }
 
-    public Date getUpdate() {
-        return update;
+    public Integer getAmount() {
+        return amount;
     }
 
-    public void setUpdate(Date updateDate) {
-        this.update = updateDate;
+    public void setAmount(Integer amount) {
+        this.amount = amount;
     }
 
-    public Double getProgress() {
-        return progress;
+    public String getDescription() {
+        return description;
     }
 
-    public void setProgress(Double progress) {
-        if (progress < 0 || progress > 1) {
-            throw new IllegalArgumentException("Progress should be in range(0,1)");
-        }
-        this.progress = progress;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Boolean getFinished() {
