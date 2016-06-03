@@ -55,7 +55,7 @@ public class PrimaryTaskDAO {
         query.setParameter("cost", primaryTask.getCost());
         query.setParameter("description", primaryTask.getDescription());
         query.setParameter("name", primaryTask.getName());
-        query.setParameter("time",primaryTask.getTimeToComplete().getTime());
+        query.setParameter("time",primaryTask.getTimeToComplete());
         int result = 0;
         try {
             result = query.executeUpdate();

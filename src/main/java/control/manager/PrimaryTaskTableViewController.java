@@ -2,6 +2,7 @@ package control.manager;
 
 import DAO.PrimaryTaskDAO;
 import app.MainApp;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -51,8 +52,8 @@ public class PrimaryTaskTableViewController {
         costColumn.setCellValueFactory(
                 new PropertyValueFactory<>("cost"));
 
-        timeToCompleteColumn.setCellValueFactory(
-                new PropertyValueFactory<>("timeToComplete"));
+        timeToCompleteColumn.setCellValueFactory(cellData ->
+                new SimpleObjectProperty<>(cellData.getValue().getTime()));
         descriptionTextArea.setEditable(false);
         descriptionTextArea.setWrapText(true);
         showDescription(null);

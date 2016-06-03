@@ -49,7 +49,7 @@ public class CreateTaskDialogController {
         costColumn.setCellValueFactory(cellData ->
                 new SimpleObjectProperty<>(cellData.getValue().getCost()));
         timeToCompleteColumn.setCellValueFactory(cellData ->
-                new SimpleObjectProperty<>(cellData.getValue().getTimeToComplete()));
+                new SimpleObjectProperty<>(cellData.getValue().getTime()));
         primaryTaskDescriptionTextArea.setEditable(false);
         primaryTaskDescriptionTextArea.setWrapText(true);
         amountField.setEditable(true);

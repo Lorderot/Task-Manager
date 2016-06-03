@@ -56,7 +56,11 @@ public class PrimaryTask {
         this.cost = cost;
     }
 
-    public Time getTimeToComplete() {
+    public Long getTimeToComplete() {
+        return timeToComplete;
+    }
+
+    public Time getTime() {
         return new Time(timeToComplete - TimeUtil.TIME_OFFSET);
     }
 

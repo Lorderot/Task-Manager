@@ -244,7 +244,7 @@ public class TaskDetailsController {
         nameOfJobTextField.setText(task.getPrimaryTask().getName());
         costField.setText(task.getPrimaryTask().getCost().toString());
         timeToCompleteField.setText(TimeUtil.toString(
-                task.getPrimaryTask().getTimeToComplete()));
+                task.getPrimaryTask().getTime()));
         descriptionTextArea.setText(task.getPrimaryTask().getDescription());
     }
 
