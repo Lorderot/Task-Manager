@@ -1,0 +1,190 @@
+log as user
+psql -d mydb -U myuser
+
+log with ADMIN rights
+sudo -u postgres psql -d db_project
+
+check the privilages on table:
+\dp planes
+
+DELETE USER:
+reassign owned by manager to worker;
+
+
+grant privileges: 
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO new_user;
+
+SHOW CODE OF FUNCTION
+select pg_get_functiondef(oid)
+from pg_proc
+where proname = 'check_primary_task_insertion';
+
+INSERT INTO primary_tasks(primary_task_id, short_name, cost, time_to_complete, description)
+VALUES(2, 'trigger test', 230, 23402, 'my tiny job');
+
+ CREATE OR REPLACE FUNCTION public.check_insertion_primary_tasks()
+  RETURNS trigger                                                 
+  LANGUAGE plpgsql                                                
+ AS $function$                                                    
+ BEGIN                                                            
+  IF NEW.cost > 0 AND char_length(NEW.description) > 0 AND NEW.time_to_complete <> null           
+  AND char_length(NEW.short_name) > 0 THEN                        
+  RETURN NEW;                                                     
+  END IF;                                                         
+  RETURN null;                                                    
+ END;                                                             
+ $function$;
+
+CREATE TRIGGER check_insertion_primary_tasks  BEFORE INSERT ON primary_tasks FOR EACH ROW EXECUTE PROCEDURE check_insertion_primary_tasks();
+
+NESTED SELECT
+select request_person_id from request_person where task_id IN (select task_id from tasks where problem_id = 2);
+
+create function getInitialProcess(task_id integer) 
+returns float8
+&&
+begin
+return select max(progress) from assigned_tasks where assigned_tasks.task_id = task_id;
+end
+&&
+language plpgsql;
+ 
+CREATE FUNCTION getInitialProgress(task_id integer) RETURNS float8 AS $$
+SELECT max(progress) from assigned_tasks where assigned_tasks.task_id = task_id;
+$$ LANGUAGE SQL;
+
+CREATE VIEW WORKERS!!!
+create view current_workers as select * from persons where access_type = 'worker' 
+AND person_id NOT IN 
+(select person_id from vacations where current_date > date_in AND current_date < date_out);
+
+CREATE FUNCTION FOR TRIGGER ON ASSIGNED_TASKS
+
+create or replace function check_insertion_assigned_tasks() 
+returns trigger AS
+$$
+begin
+NEW.finish:= false;
+NEW.date_finish = null;
+NEW.date_of_assignment = now();
+IF NEW.amount <= 0 OR NOT EXISTS(select * from persons where person_id = NEW.person_id)
+OR NOT EXISTS(select * from tasks where task_id = NEW.task_id) THEN
+return null;
+END IF;
+return NEW;
+end;
+$$ LANGUAGE plpgsql;
+
+
+create trigger check_inertion_assigned_tasks before
+insert on assigned_tasks for each row execute procedure check_insertion_assigned_tasks();
+
+create or replace function getProjectWorkers(project_id Integer)
+ returns table(first_name varchar(100), last_name varchar(100), number_of_tasks bigint) as 
+$$
+ begin
+  return QUERY select cw.first_name as name, cw.last_name as surname,
+  count(at.task_id) as number_of_tasks
+  from current_workers as cw
+  join assigned_tasks as at on cw.person_id = at.person_id
+  where (at.date_finish is null OR at.finish = true) AND
+  cw.person_id IN (select person_id from assigned_tasks 
+  where task_id IN (select task_id from tasks where problem_id = project_id))
+  group by name, surname
+  order by number_of_tasks desc, name asc;
+ end
+$$ language plpgsql;
+
+create or replace function get_project_progress(project_id Integer)
+ returns float AS 
+$$
+ declare
+	task RECORD;
+	acc_finished_tasks float := 0.0;
+	acc_amount_of_tasks float := 0.0;
+	finished_amount_of_tasks integer := 0;
+	amount_of_tasks integer := 0;
+ begin
+	for task IN select * from tasks where problem_id = project_id
+	LOOP
+	
+	select sum(amount) into finished_amount_of_tasks
+	from assigned_tasks where task_id = task.task_id AND finish = true;
+	select amount_of_primary_task into amount_of_tasks
+	from tasks where task_id = task.task_id;
+	IF finished_amount_of_tasks is NULL THEN
+	  finished_amount_of_tasks := 0;
+	END IF;
+	acc_amount_of_tasks := acc_amount_of_tasks + amount_of_tasks;
+	acc_finished_tasks := acc_finished_tasks + finished_amount_of_tasks;
+	END LOOP;
+	IF acc_amount_of_tasks = 0 THEN
+	return 0;
+	END IF;
+	return (acc_finished_tasks::float / acc_amount_of_tasks::float);
+ end
+$$ language plpgsql;
+
+	RAISE NOTICE '(%), (%)',task.task_id, task_progress;
+
+create or replace function get_task_progress(id_of_task integer)
+ returns float AS 
+$$
+ declare
+ 	finished_amount_of_tasks integer := 0;
+	amount_of_tasks integer := 0;
+ begin
+  	select sum(amount) into finished_amount_of_tasks
+	from assigned_tasks where task_id = id_of_task AND finish = true;
+	select amount_of_primary_task into amount_of_tasks
+	from tasks where task_id = id_of_task;
+	IF amount_of_tasks = 0 OR finished_amount_of_tasks is NULL THEN
+	return 0.0;
+	END IF;
+	return	finished_amount_of_tasks::float / amount_of_tasks::float;
+ end
+$$ language plpgsql;
+
+create or replace function get_time_to_finish_project(project_id integer) 
+returns bigint as
+$$
+ declare
+	task RECORD;
+	acc_time bigint := 0;
+ begin
+	for task IN select * from tasks where problem_id = project_id
+	LOOP
+	acc_time := acc_time + get_time_to_finish_task(task.task_id);	
+	END LOOP; 
+	return acc_time;
+ end
+$$ language plpgsql;
+
+create or replace function get_time_to_finish_task(id_of_task integer)
+returns bigint as
+$$
+declare
+	time bigint := 0;
+	time_to_finish bigint := 0;
+	finished_amount_of_task integer := 0;	
+	amount_of_task integer:=0;
+	primary_id integer := 0;
+begin	
+	select amount_of_primary_task into amount_of_task
+	from tasks where task_id = id_of_task;
+	select sum(amount) into finished_amount_of_task 
+	from assigned_tasks where task_id = id_of_task AND (finish = true);		
+	IF finished_amount_of_task IS NULL then
+	finished_amount_of_task := 0;
+	END IF;
+	select primary_task_id into primary_id 
+	from tasks where task_id = id_of_task;
+	select time_to_complete into time
+	from primary_tasks where primary_task_id = primary_id;
+	time_to_finish = time * (amount_of_task - finished_amount_of_task);
+	IF time_to_finish IS NULL then
+	return 0;
+	END IF;
+	return time_to_finish;	
+end
+$$ language plpgsql;
